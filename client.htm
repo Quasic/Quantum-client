@@ -1,0 +1,886 @@
+<html><head>
+<script src="http://quintrixandcrew.com/11-gfx/jquery-1.11.2.min.js" language="JavaScript"></script>
+<script src="http://quintrixandcrew.com/11-gfx/client-itemid.js" language="JavaScript"></script>
+<style>
+ .web { color: red; }
+ .popup { color: navy; }
+ .SMes { font-family: "Terminal"; color: navy; }
+ .outline { text-align: center; text-shadow: 0px 0px 32px #FFFF00; color: #008100; font-size: 28px; }
+ body { margin: 0px 0px 0px 0px; }
+</style>
+</head>
+<body bgcolor=006000 text=navy link=navy vlink=navy alink=red ondragstart="return false" onselectstart="return false">
+<noscript><font color="white" style="color:white;background-color:black">Please allow this site to use JavaScript so you can play this game. (This setting is usually in your browser preferences.)</font></noscript>
+<div background="http://quintrixandcrew.com/11-gfx/POPUP4.png" id="PopUp" style="background-image:url(http://quintrixandcrew.com/11-gfx/POPUP4.png);position:absolute;top:100;left:100;visibility:visible;z-index:254;" onMouseOver='PopUpVis="visible";' onMouseOut='PopUpVis=PopForce; Keyboard=""; PUV=setTimeout("document.getElementById(\"PopUp\").style.visibility=PopUpVis;",100);'>&nbsp;</div>
+<img src=http://quintrixandcrew.com/11-gfx/Cursor.gif id=MH name=MH style="position:absolute;top:0;left:0;visibility:hidden;z-index:255;">
+<table border=0 bordercolor=#80FF80><tr><td width=448 height=320>
+
+</td><td width=160 bgcolor=#ffffd0 valign=top align=center rowspan=2>
+ <p align=center><div class=outline>Quantum</div>
+ <table border=0 width=100%><tr><td id=SIDE name=SIDE valign=top align=center>
+ </td></tr></table>
+</td></tr><tr><td bgcolor=#ffffd0 height=150 valign=bottom align=left>
+
+ <div id=CBOX style="position:relative; width:434; height:148; overflow:hidden; clip:rect(0,434,148,0);">
+ <div ID=CHAT style="position:absolute; left:0; top:0; width:434; ">
+ 
+ </div></div>
+ 
+</td></tr>
+</table>
+
+<img src="http://quintrixandcrew.com/11-gfx/CHATUP.gif" onmousedown="javascript:ChatUp();" style="position:absolute; left:435; top:350;">
+<img src="http://quintrixandcrew.com/11-gfx/CHATDOWN.gif" onmousedown="javascript:ChatDown();" style="position:absolute; left:435; top:382;">
+
+<script language="JavaScript">
+//
+// Quantum Server-Client Gameing Engine
+// Quintrix and Crew Software
+//
+// Released as Creative Commons BY-NC, where
+// 'non-commercial' includes games created meaning
+// games cannot have money, coins, bank notes,
+// credits, or any other economic system. See license.txt
+//
+// http://creativecommons.org/licenses/by-nc/2.0/
+//
+
+ShowServer=0;
+CVer="Quantum-Alpha";
+Server="http://quintrixandcrew.com/cgi-bin/q/server.cgi";
+SName="";
+SCmd="";
+SData="";
+Items="";
+CharName="";
+SPswd="";
+PObj="";
+PToken="";
+PZloc=0;
+CharZ=0;
+StartZ=0;
+DirTile="http://quintrixandcrew.com/11-gfx/t";
+DirChar="http://quintrixandcrew.com/11-gfx/c";
+DirItem="http://quintrixandcrew.com/11-gfx/i";
+DirBuild="http://quintrixandcrew.com/11-gfx/b";
+DirKeys="http://quintrixandcrew.com/11-gfx/k";
+SCht="Quantum Server,<br>Quintrix and Crew Software<br>";
+Header="<p> &nbsp; &nbsp; &nbsp; Quintrix and Crew Software Present... &nbsp; &nbsp; &nbsp; <p align=center><div class=outline>Quantum Server</div>";
+Map="UaA2GaGaGaGaBaGaGaGaGaGaA3UaUaA2GaGaGaGaBaGaGaGaGaGaA3UaUaA2GaGaGaFbBaGaGaGaGaGaA5AaAaA4GaGaFbFbBaFbFbGaGaGaGaGaGaGaGaFbFbC5CaC6FbFbGaGaGaGaGaGaFbFbC5CaCaC2FbFbFbFbFbGaGaGaB5BbC3CaCaC3BbBbBbBbBbBbBbBbB3FbFbC7C8FbFbGaGaGaGaGaGaGaGaGaFbFbGaGaGaGaGaGaGaGaGaGaGaGaGaGaGaGaGaGaGaGaGaGa";
+DrawSB=0;
+CharMap="B2";
+DisplayCreate=0;
+LErr="";
+IErr="";
+NewObj="";
+CharDir="R";
+PopX=0;
+PopY=0;
+PopHide="hidden";
+PopAlign="center";
+PopForce="hidden";
+MapSizeX=13;
+MapSizeY=9;
+TopYPos=12;
+TopXPos=16;
+TopYPos=2;
+TopXPos=2;
+ChatLine="";
+SendChat="";
+NewChatLine="";
+Cht="";
+CHigh=148;
+
+servers=new Array();
+obj=new Array();
+ 
+StartUpGame=setTimeout('StartUp();',250); 
+
+function StartUp() {
+ if (ShowServer) {
+   //
+   // figure out how to display server here
+   //
+ } else {
+  //if (document.layers) {
+  // document.captureEvents(Event.MOUSEDOWN);document.onmousedown=MouseClick;
+  //} else { 
+  // document.oncontextmenu=MouseClick;
+  //}
+  //document.onmousedown=RightClick;
+  //document.oncontextmenu=RightClick;
+  //document.oncontextmenu=textmenu;
+ }
+ docBody=document.getElementsByTagName("body").item(0);
+ z=0;
+ for (i=0; i<MapSizeY+1; i++) {
+  for (j=0; j<MapSizeX+1; j++) {
+   eval('T'+z+'=document.createElement(\"IMG\");');
+   eval('T'+z+'.setAttribute(\"id\",'+z+');');
+   eval('docBody.appendChild(T'+z+');');
+   eval('T'+z+'.setAttribute(\"src\",\"'+DirTile+'/Ga.png\");');
+   eval('T'+z+'.onmousedown=new Function(\"ClickHere('+z+');\");');
+   eval('T'+z+'.style.position=\"absolute\";'); 
+   eval('T'+z+'.style.left='+(TopXPos+(j*32))+';');
+   eval('T'+z+'.style.top='+(TopYPos+(i*32))+';');
+   eval('T'+z+'.style.height=32;');
+   eval('T'+z+'.style.width=32;');
+   eval('T'+z+'.style.visibility=\"visible\";');
+   eval('T'+z+'.style.zindex=1;');
+   z++;
+  }
+ }
+ URL1=location.search.substr(location.search.indexOf("?"),location.search.length).split("&");
+ URLName=""; session=""; URLPswd="";
+ for (i=0;i<URL1.length;i++) {
+  URL2=URL1[i].split("="); 
+  if (URL2[0]=="n") { URLName=URL2[1]; }
+  if (URL2[0]=="p") { URLPswd=URL2[1]; }
+  if (URL2[0]=="s") { URLSrvr=URL2[1]; }
+  if (URL2[0]=="create") { DisplayCreate=URL2[1]; }
+ }
+
+ // Check for cookie and change this to OldChar() or NewChar()
+ // Welcome();
+ 
+ SName="l"; CharName=""; SPswd=""; PopForce="visible";
+
+ HitIt("","");
+ // set main loop timer here?? or after hitit?? 
+
+} 
+
+function Main() {
+  // clearTimeout(Main.timer);
+  // setTimeout('Main();',1000);
+  
+  HitIt("get","");
+
+}
+
+function Welcome() {
+  document.onkeydown=document.onkeypress=document.onkeyup=Null;
+  parent.document.onkeydown=parent.document.onkeypress=parent.document.onkeyup=Null;
+  //clearTimeout(MainLoop.timer);
+  PopForce="visible"; PopAlign="center";
+  Game=Header+"<form name=login action=\"javascript:Login();\">";
+  Game=Game+"<p align=center><a href=\'javascript:NewChar();\'>Click here to play as Guest</a>";
+  Game=Game+'<p align=right>Server Name: <input type=text name=n value="'+CharName+'">';
+  Game=Game+"<br>Password: <input type=password name=p>";
+  Game=Game+"<p align=center><input type=submit name=c value=\"login\">";
+  Game=Game+"<p align=center>New Servers Confirm Password:";
+  Game=Game+"<p align=center>Password: <input type=password size=12 name=d></form>";
+  SPswd=1;//allow popup
+  POP(Game);
+  SPswd='';
+}
+
+function Login() {
+ CharName=document.forms.login.n.value;
+ SPswd=document.forms.login.p.value;
+ Confirmed=document.forms.login.d.value;
+ if (CharName.length==0) { LErr="Enter Player Name"; Welcome(); return; }
+ if (SPswd.length<3) { LErr="Enter Password"; Welcome(); return; }
+ if (Confirmed) { if (Confirmed!=SPswd) { LErr="Passwords do not match"; Welcome(); return; }}
+ SPswd=SPswd.replace(/\#/g,"%23");
+ SPswd=SPswd.replace(/\+/g,"%2B");
+ SName=CharName;
+ POP("Logging In...");
+ HitIt("log",Confirmed);
+}
+
+function OldChar() {
+ //
+ // Decode cookie data
+ // Render selected server
+ // Start main loop
+ //
+}
+
+function ShowServers() {
+ SB="<p align=center>Select Server:<p align=center>";
+ for (i=0;i<servers.length;i++) {
+   SB=SB+"<a href=javascript:SelectServer(\""+servers[i]+"\");>"+servers[i]+"</a><br>";
+ }
+ POP(SB);
+}
+
+function SelectServer(a) { 
+  SName=a;
+  POP("Logging in...");
+  HitIt("lod","");
+}
+
+function SelectChar(a) {
+  PopForce="visible"; RChar=""; if (a=="") { a="new"; }
+  Game="<p align=center>";
+  if (a.substring(0,3)=="new") {
+    Game=Game+"Are you <a href=javascript:Null(); onmousedown=\"SelectChar(\'M\');\">MALE</a> or <a href=javascript:Null(); onmousedown=\"javascript:SelectChar(\'F\');\">FEMALE</a>?";
+  } else {
+    if (a=="M" || a=="F") {
+      Game=Game+"Select Hair Style:<p align=center>";
+      Game=Game+"<a href=javascript:Null(); onmousedown=\"javascript:SelectChar(\'"+a+"1\');\"><img src="+DirChar+"/CHRH"+a+"1R.gif border=0 height=64 width=64></a> ";
+      Game=Game+"<a href=javascript:Null(); onmousedown=\"javascript:SelectChar(\'"+a+"2\');\"><img src="+DirChar+"/CHRH"+a+"2R.gif border=0 height=64 width=64></a> ";
+      Game=Game+"<a href=javascript:Null(); onmousedown=\"javascript:SelectChar(\'"+a+"3\');\"><img src="+DirChar+"/CHRH"+a+"3R.gif border=0 height=64 width=64></a> ";
+      Game=Game+"<br>";
+      Game=Game+"<a href=javascript:Null(); onmousedown=\"javascript:SelectChar(\'"+a+"5\');\"><img src="+DirChar+"/CHRH"+a+"5R.gif border=0 height=64 width=64></a>";
+      Game=Game+"<a href=javascript:Null(); onmousedown=\"javascript:SelectChar(\'"+a+"6\');\"><img src="+DirChar+"/CHRH"+a+"6R.gif border=0 height=64 width=64></a>";
+      Game=Game+"<a href=javascript:Null(); onmousedown=\"javascript:SelectChar(\'"+a+"4\');\"><img src="+DirChar+"/CHRH"+a+"4R.gif border=0 height=64 width=64></a> ";
+      Game=Game+"<a href=javascript:Null(); onmousedown=\"javascript:SelectChar(\'"+a+"7\');\"><img src="+DirChar+"/CHRH"+a+"7R.gif border=0 height=64 width=64></a>";
+      Game=Game+"<p align=center><a href=javascript:Null(); onmousedown=\"javascript:SelectChar(\'new\');\">BACK</a>";
+    } else {
+      // can insert 'select body' here maybe
+      Game="Creating Character...";
+
+      PObj=a+"3R";
+      PZloc="78";
+      HitIt("ply",PObj+"-"+PZloc+"-60");
+      
+      // client-side variables
+      PLevel=60;
+      PInv="BdZaZaZaZaZaZaZaZaZaZaZaZaZaZaZaZaZaZaZaZaZaZaZa";
+      NumInven=PInv.length/2;
+      
+      // clean-up
+      PopForce="hidden";
+      SideBar();       
+    }
+  }
+  POP(Game);
+}
+
+function HitIt(SCmd, SData) {
+  //alert('s='+SName+'&n='+CharName+'&p='+SPswd+'&c='+SCmd+'&d='+SData);
+  servers=[];
+  $.ajax({
+    url: Server,
+    type: 'GET',
+    data: 's='+SName+'&n='+CharName+'&p='+SPswd+'&c='+SCmd+'&d='+SData,
+    contentType: 'application/json; charset=utf-8', success: function (response) {
+      SResults=response.match(/[^\r\n]+/g);
+      if (SResults) {
+        SPop="";
+        for (i=0; i<SResults.length; i++) {
+          SVar=SResults[i].substring(0,SResults[i].indexOf("="));
+          SValue=SResults[i].substring(SResults[i].indexOf("=")+1,SResults[i].length);
+          // uncomment next line to debug server results
+          // alert(SVar+"="+SValue);
+          // react to server results
+          if (SVar=="login"){
+            CharName=SValue; POP(SValue+" logged in."); PopForce="hidden"; PopAlign="char"; cinput();
+            for(var t in showtab.tabs){ if(showtab.tabs[t].log){ clog(showtab.tabs[t].loginHTML&&showtab.tabs[t].loginHTML()||"Welcome to the "+SName+" server, "+CharName+"!",showtab.tabs[t].log); }}
+            document.onkeydown=ProcessInput; document.onkeypress=CancelKey; document.onkeyup=CancelKey;
+            parent.document.onkeydown=ProcessInput; parent.document.onkeypress=parent.document.onkeyup=CancelKey;
+          }
+          if (SVar=="err") { err=err+SValue+"<br>"; }
+          if (SVar=="s") { servers.push(SValue); }
+          if (SVar=="servers") { ShowServers(); }
+          if (SVar=="hpop") { PopForce="hidden"; HPOP(); }
+          if (SVar=="pop")  { PopForce="hidden"; SPop=SPop+SValue+"<br>"; }
+          if (SVar=="alert"){ ("SResults="+SValue); }
+          if (SVar=="o") { obj[SValue.substring(0,SValue.indexOf("-"))]=SValue.substring(SValue.indexOf("-")+1,SValue.length); }
+          if (SVar=="items"){ Items=SValue; }
+          if (SVar=="eitem"){ EItems=SValue; }
+          if (SVar=="token"){ PToken=SValue; }
+        }
+        if (SPop) { SPop.length-=4;POP(SPop); }
+      }
+      
+      if (PObj=="") {
+        if (SName) { if (SName!="l") { SelectChar(""); }}
+      } else {
+        setTimeout('Main();',1000);
+      }
+      
+      CStamp=+new Date;
+      Render();
+    },
+    error: function (xhr,stat,emsg) {
+        if(typeof console!="undefined"){console.log("AJAX error: ",stat,emsg,xhr);}
+        Welcome("ERROR: Lost server connection"+(emsg?" ("+emsg+")":""));
+    }
+  });
+}
+
+function Render() {
+  //
+  // Render items on map
+  //
+
+  // figure out start-z for player token  
+  // figure out which tileset player is on
+  // loop through items, rendering any on-screen
+  //
+  // can this be done without a SHigh variable??
+  // it would be nice to reduce amount of server-side
+  // variables, but SHigh might be useful 
+  
+  SWide=(MapSizeX+1)*1; // number maps wide on this server
+  SHigh=(SWide*10)*1;   // can we eliminate this variable??
+  
+  PZ=parseInt(PZloc,16);
+  PY=Math.floor(PZ/(SWide+1));
+  PX=PZ-(PY*(SWide+1));
+
+  //
+  // will need to figure out the starting location of
+  // the current map (0, 14, 28 I think) for the player's
+  // current z-location ... for now, I am only writing
+  // a simple one-screen render routine 
+  //
+
+  // first erase all items
+  D=document.getElementById("IListLayer"); if(D){
+    while(D.childNodes.length){
+      while(D.lastChild.childNodes.length){
+        D.lastChild.removeChild(D.lastChild.lastChild);
+      }
+      D.removeChild(D.lastChild);
+    }
+  }
+  
+  StartZ=0;
+  StartY=0;
+  StartX=0;
+    
+  Game="<p align=center>PZloc="+PZloc+"<p>";
+  Game=Game+"PZ="+PZ+"<br>";
+  Game=Game+"PX="+PX+"<br>";
+  Game=Game+"PY="+PY+"<p>";
+
+  for (RY=StartY; RY<StartX+SHigh; RY++) {
+    for (RX=StartX; RX<StartX+SWide; RX++) {
+      for (i=0; i<Items.length; i=i+5) {
+        id=Items.substring(i,i+5);
+        item=Items.substring(i,i+2);
+        z=parseInt(Items.substring(i+2,i+5),16);
+        y=Math.floor(z/(SWide+1));
+        x=z-(y*(SWide+1));
+        if (RX==x) {
+          if (RY==y) {
+            Game=Game+item+" at "+z+" ("+x+","+y+") "+RX+" "+RY+"<br>";
+            if (item=="W") {
+              // render player if first letter is W
+            } else {
+              if (item=="V") {
+                // render building if first letter is V
+              } else {
+                // otherwise render item
+                D=document.getElementById("IListLayer"); if(!D){
+                  D=document.createElement("DIV");
+                  D.setAttribute("id","IListLayer");
+                  D.style.position="absolute";
+                  D.style.top=D.style.left=0;
+                  docBody.appendChild(D);
+                }
+                if (!(D1=document.getElementById(id))) {
+                  o=document.createElement("img");
+                  o.setAttribute("id",id);
+                  o.style.position="absolute";
+                  D.appendChild(o);
+                }
+                o.onmousedown=new Function("ClickHere("+z+");");
+                o.style.position="absolute";
+                o.style.left=(x*32)+32;
+                o.style.top=y*32;
+                o.style.visibility="visible";
+                e=DirItem+'/O'+item+'.gif';
+                if (o.src != e) { o.src=e; }
+              }                
+            }
+          }
+        }
+      }
+    }
+  }
+  //POP(Game);
+}
+
+function RenderObj(RItem,z) {
+  ItemY=Math.floor(IV[4]/(MapSizeX+1));
+  ItemX=IV[4]-(ItemY*(MapSizeX+1));
+  ItemZ=ItemY*12+(z||10);
+  X=TopXPos+(ItemX*32);
+  Y=TopYPos+(ItemY*32);
+  d="R"; if ( IV[1].charAt(3)=="L") { d="L"; }
+
+  // var d=document.createElement("IMG");
+  // d.setAttribute("src", "img_pulpit.jpg");
+  // d.setAttribute("width", "304");
+  // d.setAttribute("height", "228");
+  // d.setAttribute("alt", "The Pulpit Rock");
+  // document.body.appendChild(d);
+
+  if (!(d=document.getElementById(IV[2]))) {
+    D1=eval(IV[2]+'=document.createElement(\"IMG\");');
+    D1.setAttribute("id",IV[2]);
+    eval(IV[2]+'_2=document.createElement(\"IMG\");');
+    eval(IV[2]+'_2.setAttribute(\"id\",\"'+IV[2]+'_2\");');
+    D.appendChild(D1);
+    eval('D.appendChild('+IV[2]+'_2);');
+  }
+  D1.onmousedown=new Function("ClickHere("+IV[4]+");");
+  D1.style.position="absolute";
+  D1.style.left=X;
+  D1.style.top=Y;
+  D1.style.visibility="visible";
+  D1.style.zIndex=ItemZ;
+  eval(IV[2]+'_2.onmousedown=new Function(\"ClickHere('+(IV[4]-(MapSizeX+1))+');\");');
+  eval(IV[2]+'_2.style.position=\"absolute\";');
+  eval(IV[2]+'_2.style.left='+(X)+';');
+  eval(IV[2]+'_2.style.top='+(Y-16)+';');
+
+  if (D1.src != DirChar+'/CHR'+IV[1].charAt(0)+IV[1].charAt(2)+d+'.gif' ) { 
+    eval(IV[2]+'.setAttribute(\"src\",\"'+DirChar+'/CHR'+IV[1].charAt(0)+IV[1].charAt(2)+d+'.gif\");');
+  }
+  if (D1.src != DirChar+'/CHRH'+IV[1].charAt(0)+IV[1].charAt(1)+d+'.gif' ) {
+    eval(IV[2]+'_2.setAttribute(\"src\",\"'+DirChar+'/CHRH'+IV[1].charAt(0)+IV[1].charAt(1)+d+'.gif\");');
+  }
+  eval(IV[2]+'_2.style.visibility=\"visible\";');
+  eval(IV[2]+'_2.style.zIndex=ItemZ;');
+} 
+
+function ClickHere(z) {
+  z=z.toString(16);
+  if (z==PZloc) {
+    //
+    // render list
+    // add or delete item
+    //
+    Game="<a href=\'javascript: Render();\'>In-Game Items</a><br>";
+    while (z.length<3) { z="0"+z; }
+    f=0;
+    for (i=0; i<Items.length; i=i+5) {
+      a=Items.substring(i,i+2); b=Items.substring(i+2,i+5);
+      if (b==z) {
+        Game=Game+"<a href=\'javascript:UseItem(\""+a+"\",\""+z+"\");\'>"+ItemID(a)+"</a><br>";
+      }
+    }
+    if (f==0) { 
+      Game=Game+"<a href=\'javascript: AddItem(0);\'>Add Item</a><br>";
+    }
+    POP(Game);
+  } else {
+    HitIt("mov",PToken+PZloc+"-"+z);
+    POP("mov "+PToken+PZloc+"-"+z);
+    PZloc=z;
+  }
+}
+
+function AddItem(a) {
+  Game="Add Item<p>";
+  if (a) {
+    HitIt("add",a+"-"+PZloc+"-0");
+  } else {
+    Game=Game+"<a href='javascript:AddItem(\"Yh\");'>Well</a><br>";
+    Game=Game+"<a href='javascript:AddItem(\"Bd\");'>Bucket</a><br>";
+    Game=Game+"<a href='javascript:AddItem(\"Ye\");'>Switch</a><br>";
+  }
+  POP(Game);
+}
+
+function DeleteItem(a,b) {
+  POP("Deleting "+ItemID(a));
+  HitIt("del",a+b);
+}
+
+function UseItem(a,z) {
+  Game=a+" "+z+"<p>";
+  z=z.toString(16);  
+
+  if (a.charAt(0)!="W") {
+    f=1; Game=Game+"<a href=\'javascript:DeleteItem(a,b);\'>Delete "+ItemID(a)+"</a><br>";
+  }
+
+  if (a=="Ye") { Game=Game+"Turning Switch On..."; HitIt("ren",a+z+"-Yf"); }
+  if (a=="Yf") { Game=Game+"Turning Switch Off..."; HitIt("ren",a+z+"-Ye"); } 
+  if (a=="Yh") { 
+    PInv=PInv.replace(/Bd/,"Ei");
+    SideBar();
+  }
+  POP(Game); 
+}
+
+function SideBar() {
+  SB="<p align=center>";
+  if (DrawSB==0) {
+    DrawSB=1;
+    for (i=0;i<NumInven;i++) {
+      SB=SB+"<img id=\"Inv"+i+"\" src=\""+DirItem+"/OZa.gif\" height=32 width=32 ";
+      SB=SB+"onmousedown=\"ClickInven("+i+");\"";
+      SB=SB+" border=1> ";
+    }
+    document.getElementById("SIDE").innerHTML=SB;
+  }
+  a=PObj.substring(4,PObj.length);
+  for (i=0;i<NumInven;i++) { 
+    document.getElementById("Inv"+i).src=DirItem+"/O"+PInv.substring(i*2,i*2+2)+".gif";
+    bg="#ffffd0"; //if (PInv.indexOf("F3")==(i*2)) { if (PObj.charAt(1)=="0") { bg="#80FF80"; }}
+                  //if (a.indexOf("L")>-1) { if (PInv.indexOf(a.substring(a.indexOf("L"),a.indexOf("L")+2)) == (i*2)) { bg="#80FF80"; }}
+    //document.getElementById("Inv"+i).style.backgroundColor=bg;
+  }
+}
+
+function ClickInven(i) {
+  IStamp=CStamp;
+  if (PInv.substring(i*2,i*2+2)!="Z0") {
+    PUP="<b>"; MenuItem=PInv.substring(i*2,i*2+2);
+    a=PObj.substring(4,PObj.length);
+    BAx=0;
+    if (MenuItem=="B4") { if (a.indexOf("B4")>-1) { BAx=1; } else { BAx=2; }}
+    if (MenuItem=="B5") { if (a.indexOf("B5")>-1) { BAx=1; } else { BAx=2; }}
+    if (MenuItem=="B6") { if (a.indexOf("B6")>-1) { BAx=1; } else { BAx=2; }}
+    if (MenuItem=="B9") { if (a.indexOf("B9")>-1) { BAx=1; } else { BAx=2; }}
+    if (MenuItem=="B0") { if (a.indexOf("B0")>-1) { BAx=1; } else { BAx=2; }}
+    if (MenuItem=="Ba") { if (a.indexOf("Ba")>-1) { BAx=1; } else { BAx=2; }}
+    if (MenuItem=="Bb") { if (a.indexOf("Bb")>-1) { BAx=1; } else { BAx=2; }}
+    if (BAx==1) { PUP=PUP+"<a href=javascript:Null(); onmousedown=\"JavaScript:RemoveArmr("+i+")\">Remove "+ItemID(PInv.substring(i*2,i*2+2))+"</a><br>"; }
+    if (BAx==2) { PUP=PUP+"<a href=javascript:Null(); onmousedown=\"JavaScript:WearArmr("+i+")\">Wield "+ItemID(PInv.substring(i*2,i*2+2))+"</a><br>"; }
+    if (MenuItem=="Ca") { PUP=PUP+"<a href=javascript:Null(); onmousedown=\"JavaScript:ReadNotes("+i+")\">Read Notes</a><br>"; }
+    if (MenuItem=="Cb") { PUP=PUP+"<a href=javascript:Null(); onmousedown=\"JavaScript:ReadFlyer("+i+")\">Read Flyer</a><br>"; }
+    if (MenuItem=="F3") { if (PObj.charAt(1)=="0") { PUP=PUP+"<a href=javascript:Null(); onmousedown=\"JavaScript:WearPumpkin("+i+")\">Remove Pumpkin</a><br>"; } else { PUP=PUP+"<a href=javascript:Null(); onmousedown=\"JavaScript:WearPumpkin("+i+")\">Wear Pumpkin</a><br>"; }}
+    RFlag="";
+    if (MenuItem=="F4") { RFlag="X"; }
+    if (MenuItem=="F5") { RFlag="Z"; }
+    if (MenuItem=="F6") { RFlag="W"; }
+    if (MenuItem=="F7") { RFlag="V"; }
+    if (MenuItem=="F8") { RFlag="U"; }
+    if (MenuItem=="F9") { RFlag="T"; }
+    if (MenuItem=="Fa") { RFlag="R"; }
+    if (RFlag) {
+      if (PObj.charAt(2)==RFlag) { RFlag="Remove "; } else { RFlag="Wear "; }
+      PUP=PUP+"<a href=javascript:Null(); onmousedown=\"JavaScript:WearRobes("+i+")\">"+RFlag+ItemID(MenuItem)+"</a><br>";
+    }
+    if (MenuItem>="D6" && MenuItem<="D8") { PUP=PUP+"<a href=javascript:Null(); onmousedown=\"JavaScript:LightFire("+i+")\">Light Fire</a><br>";
+    if (MenuItem!="D8") { PUP=PUP+"<a href=javascript:Null(); onmousedown=\"JavaScript:SMatch()\">Stack Matches</a><br>"; }}
+    if (MenuItem=="C4") { PUP=PUP+"<a href=javascript:Null(); onmousedown=\"JavaScript:FixAxe("+i+")\">Fix Broken Pick Axe</a><br>"; }
+    if (MenuItem=="C6") { PUP=PUP+"<a href=javascript:Null(); onmousedown=\"JavaScript:FixAxe("+i+")\">Fix Broken Axe</a><br>"; } 
+    if (MenuItem=="E1") { PUP=PUP+"<a href=javascript:Null(); onmousedown=\"JavaScript:OpenChest("+i+")\">Open Treasure Chest</a><br>"; }
+    if (MenuItem=="E2") { PUP=PUP+"<a href=javascript:Null(); onmousedown=\"JavaScript:OpenBarrel("+i+")\">Open Catfish</a><br>"; }
+    if (MenuItem=="E3") { PUP=PUP+"<a href=javascript:Null(); onmousedown=\"JavaScript:OpenBarrel("+i+")\">Open Flounder</a><br>"; }
+    if (MenuItem=="E4") { PUP=PUP+"<a href=javascript:Null(); onmousedown=\"JavaScript:OpenBarrel("+i+")\">Open Lobster</a><br>"; }
+    if (MenuItem=="E6") { PUP=PUP+"<a href=javascript:Null(); onmousedown=\"JavaScript:MArrows()\">Make Arrows</a><br>"; }
+    if (MenuItem=="E7") { PUP=PUP+"<a href=javascript:Null(); onmousedown=\"JavaScript:Quiver("+i+")\">Quiver Arrows</a><br>"; }
+    if (MenuItem=="H3") { PUP=PUP+"<a href=javascript:Null(); onmousedown=\"JavaScript:Charge("+i+")\">Charge Wand</a><br>"; }
+    if (MenuItem=="H5") { PUP=PUP+"<a href=javascript:Null(); onmousedown=\"JavaScript:Charge("+i+")\">Charge Wand</a><br>"; }
+    if (MenuItem=="H8") { PUP=PUP+"<a href=javascript:Null(); onmousedown=\"JavaScript:Charge("+i+")\">Charge Wand</a><br>"; }
+    if (MenuItem>="G0" && MenuItem<="Gz") { PUP=PUP+"<a href=javascript:Null(); onmousedown=\"JavaScript:Cook("+i+")\">Cook "+ItemID(MenuItem)+"</a><br>"; }
+    if (MenuItem>="J0" && MenuItem<="K9") { PUP=PUP+"<a href=javascript:Null(); onmousedown=\"JavaScript:EatFood("+i+")\">Eat "+ItemID(MenuItem)+"</a><br>"; }
+    if (MenuItem=="I0") { PUP=PUP+"<a href=javascript:Null(); onmousedown=\"JavaScript:EatFood("+i+")\">Eat "+ItemID(MenuItem)+"</a><br>"; }
+    if (MenuItem>="K7" && MenuItem<="K9") { PUP=PUP+"<a href=javascript:Null(); onmousedown=\"JavaScript:SPizza("+i+")\">Stack "+ItemID(MenuItem)+"</a><br>"; }
+    if (MenuItem>="L0" && MenuItem<="Mz") { 
+      if (a.indexOf(MenuItem)>-1) { 
+        PUP=PUP+"<a href=javascript:Null(); onmousedown=\"JavaScript:RemoveArmr("+i+")\">Remove "+ItemID(MenuItem)+"</a><br>";
+      } else {
+        PUP=PUP+"<a href=javascript:Null(); onmousedown=\"JavaScript:WearArmr("+i+")\">Wear "+ItemID(MenuItem)+"</a><br>";
+      }
+      if (MenuItem=="L8"||MenuItem=="L9"||MenuItem=="L0") {
+        if (PObj.substring(4,PObj.length).indexOf(MenuItem)>-1) {
+          if (!TileMode) { 
+            PUP=PUP+"<a href=javascript:Null(); onmousedown=\"JavaScript:HatHouse()\">House Teleport</a><br>";
+            PUP=PUP+"<a href=javascript:Null(); onmousedown=\"JavaScript:HatCastle()\">Castle Teleport</a><br>";
+            PUP=PUP+"<a href=javascript:Null(); onmousedown=\"JavaScript:HatOakland()\">Oakland Teleport</a><br>";
+            PUP=PUP+"<a href=javascript:Null(); onmousedown=\"JavaScript:HatBLands()\">Badlands Teleport</a><br>";
+            PUP=PUP+"<a href=javascript:Null(); onmousedown=\"JavaScript:HatButler()\">Butler Teleport</a><br>"; }
+            if (Admin) { PUP=PUP+AdminHat(MenuItem); }
+          }
+        }
+      }
+     if (MenuItem=="N6"||MenuItem=="N2"||MenuItem=="N8"||MenuItem=="N4"||MenuItem=="N0"||MenuItem=="Na") {
+       if (a.indexOf(MenuItem)>-1) { 
+         PUP=PUP+"<a href=javascript:Null(); onmousedown=\"JavaScript:RemoveArmr("+i+")\">Remove "+ItemID(MenuItem)+"</a><br>";
+       } else {
+         PUP=PUP+"<a href=javascript:Null(); onmousedown=\"JavaScript:WearArmr("+i+")\">Wear "+ItemID(MenuItem)+"</a><br>";
+       }
+     }
+     if (MenuItem=="N4") {
+       PUP=PUP+"<a href=javascript:Null(); onmousedown=\"JavaScript:QuiverExam("+i+")\">Examine "+ItemID(MenuItem)+"</a><br>";
+       PUP=PUP+"<a href=javascript:Null(); onmousedown=\"JavaScript:RemoveArrows("+i+")\">Remove Arrows</a><br>"; 
+     }         
+     if (MenuItem=="N1"||MenuItem=="N3"||MenuItem=="N5"||MenuItem=="N7"||MenuItem=="N9") { 
+       b=".."; if (PObj.charAt(2)=="6") { b="N1"; }
+       if (PObj.charAt(2)=="7") { b="N3"; }
+       if (PObj.charAt(2)=="8") { b="N5"; }
+       if (PObj.charAt(2)=="9") { b="N7"; }
+       if (PObj.charAt(2)=="0") { b="N9"; }
+       if (b==MenuItem) { PUP=PUP+"<a href=javascript:Null(); onmousedown=\"JavaScript:RemoveArmr("+i+")\">Remove "+ItemID(MenuItem)+"</a><br>"; } else { PUP=PUP+"<a href=javascript:Null(); onmousedown=\"JavaScript:WearArmr("+i+")\">Wear "+ItemID(MenuItem)+"</a><br>"; }
+     }
+     if (MenuItem>="O0" && MenuItem<="O9") {
+       if (a.indexOf(MenuItem)>-1) {
+         PUP=PUP+"<a href=javascript:Null(); onmousedown=\"JavaScript:RemoveArmr("+i+")\">Remove "+ItemID(MenuItem)+"</a><br>";
+       } else {
+         PUP=PUP+"<a href=javascript:Null(); onmousedown=\"JavaScript:WearArmr("+i+")\">Wear "+ItemID(MenuItem)+"</a><br>";
+       }
+     }
+     if (MenuItem>="P0" && MenuItem<="Pf") { 
+       if (a.indexOf(MenuItem)>-1) {
+         PUP=PUP+"<a href=javascript:Null(); onmousedown=\"JavaScript:RemoveArmr("+i+")\">Remove "+ItemID(MenuItem)+"</a><br>";
+         if (MenuItem=="P2" || MenuItem=="P5" || MenuItem=="P8") { 
+           PUP=PUP+"<a href=javascript:Null(); onmousedown=\"JavaScript:CastSpell(\'Strength\');\">Cast Strength Spell</a><br>"; 
+           PUP=PUP+"<a href=javascript:Null(); onmousedown=\"JavaScript:CastSpell(\'Accuracy\');\">Cast Accuracy Spell</a><br>";
+           PUP=PUP+"<a href=javascript:Null(); onmousedown=\"JavaScript:CastSpell(\'Defense\');\">Cast Defense Spell</a><br>";
+         }
+       } else {
+         PUP=PUP+"<a href=javascript:Null(); onmousedown=\"JavaScript:WearArmr("+i+")\">Wield "+ItemID(MenuItem)+"</a><br>";
+       }
+     }
+     if (MenuItem>="R1" && MenuItem<="R3") { PUP=PUP+"<a href=javascript:Null(); onmousedown=\"JavaScript:DrinkPotion("+i+")\">Drink "+ItemID(MenuItem)+"</a><br>"; PUP=PUP+"<a href=javascript:Null(); onmousedown=\"JavaScript:FillPotion("+i+")\">Fill Potion</a><br>"; }
+     if (MenuItem>="R4" && MenuItem<="R6") { PUP=PUP+"<a href=javascript:Null(); onmousedown=\"JavaScript:StackPArrows("+i+")\">Stack Poisoned Arrowheads</a><br>"; }
+     if (MenuItem>="R7" && MenuItem<="R9") { PUP=PUP+"<a href=javascript:Null(); onmousedown=\"JavaScript:DrinkPotion("+i+")\">Drink "+ItemID(MenuItem)+"</a><br>"; PUP=PUP+"<a href=javascript:Null(); onmousedown=\"JavaScript:FillPotion("+i+")\">Fill Potion</a><br>"; }
+     if (MenuItem=="Ra") { PUP=PUP+"<a href=javascript:Null(); onmousedown=\"JavaScript:TreatBag("+i+")\">Fill Treat Bag</a><br>"; }
+     if (MenuItem=="Rb") { PUP=PUP+"<a href=javascript:Null(); onmousedown=\"JavaScript:TreatBag("+i+")\">Open Treat Bag</a><br>"; }
+     if (MenuItem>="Rc" && MenuItem<="Re") { PUP=PUP+"<a href=javascript:Null(); onmousedown=\"JavaScript:DrinkPotion("+i+")\">Drink "+ItemID(MenuItem)+"</a><br>"; PUP=PUP+"<a href=javascript:Null(); onmousedown=\"JavaScript:FillPotion("+i+")\">Fill Potion</a><br>"; }
+     PUP=PUP+"<a href=javascript:Null(); onmousedown=\"JavaScript:DropItem("+i+")\">Drop "+ItemID(MenuItem)+"</a><br>";
+     PopAlign="inven"; PopClick=i;
+     POP(PUP+"</font></b>");
+  }
+} 
+
+function ItemMenu(itemz,c) { if (c<"S1") { if (c=="F1") { return"<a href=javascript:Null(); onmousedown=\"javascript:AttkChicken2("+itemz+",'"+c+"');\">Attack "+ItemID(c)+"</a><br>"; } else { return"<a href=javascript:Null(); onmousedown=\"javascript:GetDItem2("+itemz+",'"+c+"');\">Get "+ItemID(c)+"</a><br>"; }} if (c=="Z8") { return"<a href=javascript:Null(); onmousedown=\"javascript:Fort(0);\">Enter Hidden Fort</a><br>"; } if (c=="Z7") { return"<a href=javascript:Null(); onmousedown=\"javascript:Trader(0);\">Talk to Trader</a><br>"; } if (c=="Z6") { return"<a href=javascript:Null(); onmousedown=\"javascript:UseFire2("+itemz+",'"+c+"');\">Use Fire</a><br>"; }} 
+function ProcessMenu(i,j) { Rtn=""; if (IV[1]<"S0") { if (IV[1]>"A") { f=1; Rtn="<a href=javascript:Null(); onmousedown=\"javascript:GetSItem("+i+");\">Get "+ItemID(IV[1])+"</a><br>"; }} else { if (IV[1]<"R0") { f=1; Rtn="<a href=javascript:Null(); onmousedown=\"javascript:SMine("+i+");\">Mine "+ItemID(IV[1])+"</a><br>"; } else { if (IV[1]=="S1") { f=1; Rtn="<a href=javascript:Null(); onmousedown=\"javascript:Badlands("+i+");\">"+ItemID(IV[1])+"</a><br>"; } else { if (IV[1]=="S2") { f=1; Rtn="<a href=javascript:Null(); onmousedown=\"javascript:Aggressive("+i+");\">"+ItemID(IV[1])+"</a><br>"; } else { if (IV[1]=="S5" || IV[1]=="S6") { if (SwitchIs=="S6") { f=1; Rtn="<a href=javascript:Null(); onmousedown=\"javascript:WalkHere("+IV[4]+"); Switch(0);\">Switch is On</a><br>"; } else { f=1; Rtn="<a href=javascript:Null(); onmousedown=\"javascript:WalkHere("+IV[4]+"); Switch(1);\">Switch is Off</a><br>"; }} else { if (IV[1]<"Z1") { if (IV[3].charAt(0)!="K") { f=1; if (PObj.indexOf("P2")>-1) { Rtn="<a href=javascript:Null(); onmousedown=\"javascript:AttkSItem("+i+");\">Water Blast "+ItemID(IV[1])+" (Lvl "+ItemLevel(IV[1])+")</a><br>"; } else { if (PObj.indexOf("P5")>-1) { Rtn="<a href=javascript:Null(); onmousedown=\"javascript:AttkSItem("+i+");\">Fire Ball "+ItemID(IV[1])+" (Lvl "+ItemLevel(IV[1])+")</a><br>"; } else { if (PObj.indexOf("P8")>-1) { Rtn="<a href=javascript:Null(); onmousedown=\"javascript:AttkSItem("+i+");\">Wind Burst "+ItemID(IV[1])+" (Lvl "+ItemLevel(IV[1])+")</a><br>"; } else { Rtn="<a href=javascript:Null(); onmousedown=\"javascript:AttkSItem("+i+");\">Attack "+ItemID(IV[1])+" (Lvl "+ItemLevel(IV[1])+")</a><br>"; }}}}}}}}}} if (IV[1]=="Z2") { f=1; Rtn="<a href=javascript:Null(); onmousedown=\"javascript:ReadSign("+i+");\">Read Sign</a><br>"; } if (IV[1]=="Z3") { f=1; Rtn="<a href=javascript:Null(); onmousedown=\"javascript:SFish("+i+");\">Catch "+ItemID(IV[2])+"</a><br>"; } if (IV[1]=="Z4") { f=1; Rtn="<a href=javascript:Null(); onmousedown=\"javascript:EnterSCity("+i+");\">Enter City</a><br>"; } if (IV[1]=="Z5") { f=1; Rtn="<a href=javascript:Null(); onmousedown=\"javascript:UseSItem("+i+");\">Use "+ItemID(IV[1])+"</a><br>"; } if (IV[1]=="Z6") { f=1; Rtn="<a href=javascript:Null(); onmousedown=\"javascript:UseSItem("+i+");\">Use "+ItemID(IV[1])+"</a><br>"; } if (IV[1]=="Z8") { f=1; Rtn="<a href=javascript:Null(); onmousedown=\"javascript:EnterSCity("+i+");\">Enter Hidden Fort</a><br>"; } if (Admin) { Rtn=Rtn+AdminStatic(i); } return Rtn; } 
+function WalkHere(i) { HPOP(); PopForce="hidden"; Destination=i; MoveTo=1; DynItem=""; MoveToY=Math.floor(i/(MapSizeX+1)); MoveToX=i-(MoveToY*(MapSizeX+1)); document.getElementById("MH").style.left=MoveToX*32+TopXPos; document.getElementById("MH").style.top=MoveToY*32+TopYPos; document.getElementById("MH").style.visibility="visible"; HideObjs=setTimeout('document.getElementById("MH").style.visibility="hidden";',250); } 
+function StepHere(a) { if (Retreat==0) { if (TradeOn==0) { Que=""; Skill=""; IStamp=CStamp; HPOP(); MoveTo=1; Destination=a; MoveToY=Math.floor(a/(MapSizeX+1)); MoveToX=a-(MoveToY*(MapSizeX+1)); }}} 
+function Moving() { 
+ if (CMode) { CMode=0; RefChat=1; document.getElementById("msgs").src="http://queville.com/images/buttons/d_msgs.gif"; }
+ if (SBMode==0) { SBMode=LSBMode; RefSB=1; }
+ CharY=Math.floor(CharZ/(MapSizeX+1));
+ CharX=CharZ-(CharY*(MapSizeX+1));
+ NewCharZ=CharZ; NewCharX=CharX; NewCharY=CharY;
+ if (CharX>MoveToX) { DistanceX=CharX-MoveToX; } else { DistanceX=MoveToX-CharX; }
+ if (CharY>MoveToY) { DistanceY=CharY-MoveToY; } else { DistanceY=MoveToY-CharY; }
+ if (DistanceX>DistanceY) { 
+  if (CharX>MoveToX) { NewCharX=CharX-1; NewCharZ=CharZ-1; CharMove="W"; CharDir="L"; }
+  if (CharX<MoveToX) { NewCharX=CharX+1; NewCharZ=CharZ+1; CharMove="E"; CharDir="R"; }
+ } else {
+  if (CharY>MoveToY) { NewCharY=CharY-1; NewCharZ=CharZ-(MapSizeX+1); CharMove="N"; }
+  if (CharY<MoveToY) { NewCharY=CharY+1; NewCharZ=CharZ+(MapSizeX+1); CharMove="S"; }
+ }
+ AllowMove=1;
+ if (NewCharY<0) { AllowMove=0; } if (NewCharY>MapSizeY) { AllowMove=0; }
+ if (NewCharX<0) { AllowMove=0; } if (NewCharX>MapSizeX) { AllowMove=0; }
+ NewCharZ=NewCharY*(MapSizeX+1)+NewCharX;
+ BoatObj="";
+ if (TileMode==0) { 
+  b=Map.charAt(CharZ*2); c=Map.charAt(NewCharZ*2);
+  if (c>"K") { AllowMove=0; }
+  if (c=="R") { AllowMove=0; if (PInv.indexOf("A1")>-1 || PInv.indexOf("A0")>-1) { AllowMove=1; }}
+  if (c=="S") { AllowMove=0; if (PInv.indexOf("A3")>-1 || PInv.indexOf("A0")>-1) { AllowMove=1; }}
+  if (c=="T") { AllowMove=0; if (PInv.indexOf("A2")>-1 || PInv.indexOf("A0")>-1) { AllowMove=1; }}
+  if (c=="M") { AllowMove=0; if (PInv.indexOf("A4")>-1 || PInv.indexOf("A0")>-1) { AllowMove=1; }}
+  if (c=="G") { if (b=="U") { RefSB=1; }}
+  if (c=="U") { 
+   Boat=""; if (PInv.indexOf("A5")>-1) { Boat="5"; } if (PInv.indexOf("A6")>-1) { Boat="6"; } if (PInv.indexOf("A7")>-1) { Boat="7"; }
+   if (Boat) { 
+    if (b=="U") { if (Map.charAt((NewCharZ*2)+1) != "9") { if (Map.charAt((NewCharZ*2)+1) != "8") { if (Map.charAt((NewCharZ*2)+1) != "c") { AllowMove=1; BoatObj="A"+Boat; }}}}
+    if (b=="G") { if (Map.charAt((CharZ*2)+1)=="9" || Map.charAt((CharZ*2)+1)=="8" || Map.charAt((CharZ*2)+1)=="c") { if (Map.charAt((NewCharZ*2)+1)<Boat) { AllowMove=1; BoatObj="A"+Boat; RefSB=1; }}}
+   } else {
+    AllowMove=0;
+   }
+  } else {
+   if (b=="U") {
+    if (Map.charAt((NewCharZ*2)+1)=="9" || Map.charAt((NewCharZ*2)+1)=="8" || Map.charAt((NewCharZ*2)+1)=="c") {
+     if (Map.charAt((NewCharZ*2))=="G") { AllowMove=1; } else { AllowMove=0; }
+    } else {
+     AllowMove=0;
+    }
+   }
+  }
+ } else {
+  AdminMoving();
+ }
+ if (SResults) {
+  if (NewCharX==0) { AllowMove=0; }
+  if (NewCharX==MapSizeX) { AllowMove=0; }
+  if (NewCharY==0) { AllowMove=0; }
+  if (NewCharY==MapSizeY) { AllowMove=0; }
+ }
+ if (AllowMove) {
+  CharZ=NewCharZ; CharY=NewCharY; CharX=NewCharX;
+  if (CharMap=="H3e") {
+   if (CharZ==65) {
+    CharZ=60; MoveTo=0; RefChar=1; 
+   } else {
+    if (CharZ==60) {
+     CharZ=65; MoveTo=0; RefChar=1;
+    }
+   }
+  }
+  if (CharMap=="I3e") {
+   if (CharZ==87) {
+    CharZ=45; MoveTo=0; RefChar=1;
+   } else {
+    if (CharZ==45) {
+     CharZ=87; MoveTo=0; RefChar=1;
+    }
+   }
+   if (CharZ==52) {
+    CharZ=94; MoveTo=0; RefChar=1;
+   } else {
+    if (CharZ==94) {
+     CharZ=52; MoveTo=0; RefChar=1;
+    }
+   }
+  }
+  InputLine=InputLine+CharMove;
+  if (KCap) { ChatLine=ChatLine+CharMove; RefChat=1; }
+ } else { 
+  MoveTo=0;
+ }
+ PObj=CharObj.substring(0,3)+CharDir+PObj.substring(4,PObj.length)+BoatObj;
+ a="N|"+PObj+"|"+CharName+"||"+CharZ;
+ IV = a.split("|"); RenderObj(); RefChar=0;
+ if (document.getElementById(IV[2]+"_DAM")) { 
+  eval('docBody.removeChild('+IV[2]+'_DAM);');
+  if (SSkill=="PAk") { RenderDam(); }
+  if (SSkill=="PAK") { RenderDam(); }
+ }
+ if (AllowScroll==0) { AllowScroll=1; if (CharX==0) { AllowScroll=0; } if (CharX==MapSizeX) { AllowScroll=0; } if (CharY==0) { AllowScroll=0; } if (CharY==MapSizeY) { AllowScroll=0; } if (TileMode) { AllowScroll=0; }} if (AllowScroll) { if (GotStats) { if (CharMap.indexOf("e")>-1) { if (CharY<1) { XFlag=1; if (CharMap=="C7e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=A7e"; } if (CharMap=="B1e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=A1e"; } if (CharMap=="B0e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=A0e"; } if (CharMap=="C0e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=B0e"; } if (CharMap=="J0e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=I0e"; } if (CharMap=="K0e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=J0e"; } if (CharMap=="I3e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=H3e"; } if (CharMap=="H2e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=G2e"; } if (CharMap=="I2e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=H2e"; } if (CharMap=="L6e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=L7e"; } if (CharMap=="D6e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=B8e"; } if (CharMap=="K6e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=J6e"; } if (CharMap=="K7e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=J7e"; } if (CharMap=="L5e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=K5e"; } if (CharMap=="K3e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=J3e"; } if (CharMap=="B5e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=A5e"; } if (CharMap=="B4e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=A4e"; } if (XFlag) { MoveTo=0; EraseAll(); ToDo="C=XC&J="+((MapSizeY*(MapSizeX+1))+CharX); }} if (CharY>MapSizeY-1) { XFlag=1; if (CharMap=="J2e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=K2e"; } if (CharMap=="A1e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=B1e"; } if (CharMap=="B0e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=C0e"; } if (CharMap=="A0e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=B0e"; } if (CharMap=="F0e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=G0e"; } if (CharMap=="I0e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=J0e"; } if (CharMap=="J0e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=K0e"; } if (CharMap=="H3e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=I3e"; } if (CharMap=="G2e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=H2e"; } if (CharMap=="H2e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=I2e"; } if (CharMap=="L7e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=L6e"; } if (CharMap=="D6e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=B8e"; } if (CharMap=="J7e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=K7e"; } if (CharMap=="K5e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=L5e"; } if (CharMap=="J6e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=K6e"; } if (CharMap=="J3e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=K3e"; } if (CharMap=="A5e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=B5e"; } if (CharMap=="A4e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=B4e"; } if (CharMap=="B3e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=C3e"; } if (XFlag) { MoveTo=0; EraseAll(); ToDo="C=XC&J="+CharX; }} if (CharX>MapSizeX-1) { XFlag=1; if (CharMap=="G8e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=H0e"; } if (CharMap=="H0e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=H8e"; } if (CharMap=="H8e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=G8e"; } if (CharMap=="A1e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=A2e"; } if (CharMap=="B0e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=B1e"; } if (CharMap=="C0e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=C1e"; } if (CharMap=="J9e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=J0e"; } if (CharMap=="D6e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=B8e"; } if (CharMap=="K5e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=K6e"; } if (CharMap=="J3e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=J4e"; } if (CharMap=="A4e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=A5e"; } if (CharMap=="B4e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=B5e"; } if (XFlag) { MoveTo=0; EraseAll(); ToDo="C=XC&J="+CharY*(MapSizeX+1); }} if (CharX<1) { XFlag=1; if (CharMap=="H8e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=H0e"; } if (CharMap=="G8e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=H8e"; } if (CharMap=="H0e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=G8e"; } if (CharMap=="A2e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=A1e"; } if (CharMap=="B1e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=B0e"; } if (CharMap=="C1e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=C0e"; } if (CharMap=="J0e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=J9e"; } if (CharMap=="D6e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=B8e"; } if (CharMap=="K6e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=K5e"; } if (CharMap=="J4e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=J3e"; } if (CharMap=="A6e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=A5e"; } if (CharMap=="A5e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=A4e"; } if (CharMap=="B5e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=B4e"; } if (CharMap=="B4e") { XFlag=0; MoveTo=0; EraseAll(); ToDo="C=TP&J=B3e"; } if (XFlag) { MoveTo=0; EraseAll(); ToDo="C=XC&J="+((CharY*(MapSizeX+1))+MapSizeX); }}} else { if (CharY<1) { MoveTo=0; AllowScroll=0; EraseAll(); InputLine=InputLine+"N"; ToDo="C=N&J="+((MapSizeY*(MapSizeX+1))+CharX); } if (CharY>MapSizeY-1) { MoveTo=0; AllowScroll=0; EraseAll(); InputLine=InputLine+"S"; ToDo="C=S&J="+CharX; } if (CharX>MapSizeX-1) { MoveTo=0; AllowScroll=0; EraseAll(); InputLine=InputLine+"E"; ToDo="C=E&J="+CharY*(MapSizeX+1); } if (CharX<1) { MoveTo=0; AllowScroll=0; EraseAll(); InputLine=InputLine+"W"; ToDo="C=W&J="+((CharY*(MapSizeX+1))+MapSizeX); }}}} if (CharY==MoveToY) { if (CharX==MoveToX) { MoveTo=0; }}
+} 
+
+
+
+
+
+
+function HPOP() { document.getElementById("PopUp").style.visibility="hidden"; Keyboard=""; } 
+function POP(a) { document.getElementById("PopUp").style.top=0; document.getElementById("PopUp").style.left=0; document.getElementById("PopUp").innerHTML="<b>"+a+"</b>"; switch (PopAlign) { case "char": PopY=TopYPos+(CharY*32)+8; PopX=TopXPos+(CharX*32)+32; if (PopY<TopYPos) { PopY=TopYPos; } if (PopY<TopYPos+10) { PopY=TopYPos+10; } if (PopX<TopXPos) { PopX=TopXPos; } if (PopX<TopXPos+10) { PopX=TopXPos+10; } if (PopX+document.getElementById("PopUp").scrollWidth>TopXPos+424) { PopX=(TopXPos+424)-document.getElementById("PopUp").scrollWidth; } if (PopY+document.getElementById("PopUp").scrollHeight>TopYPos+300) { PopY=(TopYPos+300)-document.getElementById("PopUp").scrollHeight; } if (PopY<TopYPos) { PopY=(TopYPos); } break; case "center": PopX=TopXPos+((448-document.getElementById("PopUp").scrollWidth)/2); PopY=TopYPos+((320-document.getElementById("PopUp").scrollHeight)/2); if (PopX+document.getElementById("PopUp").scrollWidth>TopXPos+628) { PopX=(TopXPos+628)-document.getElementById("PopUp").scrollWidth; } if (PopY+document.getElementById("PopUp").scrollHeight>TopYPos+320) { PopY=(TopYPos+320)-document.getElementById("PopUp").scrollHeight; } if (PopY<TopYPos) { PopY=(TopYPos); } break; case "login": PopX=TopXPos+((448-document.getElementById("PopUp").scrollWidth)/2); PopY=TopYPos+((260-document.getElementById("PopUp").scrollHeight)/2); if (PopX+document.getElementById("PopUp").scrollWidth>TopXPos+628) { PopX=(TopXPos+628)-document.getElementById("PopUp").scrollWidth; } if (PopY+document.getElementById("PopUp").scrollHeight>TopYPos+320) { PopY=(TopYPos+320)-document.getElementById("PopUp").scrollHeight; } break; case "click": PopY=Math.floor(PopClick/(MapSizeX+1)); PopX=PopClick-(PopY*(MapSizeX+1)); PopY=(PopY*32)+22; PopX=(PopX*32)+22; if (PopX+document.getElementById("PopUp").scrollWidth>TopXPos+424) { PopX=(TopXPos+424)-document.getElementById("PopUp").scrollWidth; } if (PopY+document.getElementById("PopUp").scrollHeight>TopYPos+300) { PopY=(TopYPos+300)-document.getElementById("PopUp").scrollHeight; } break; case "inven": PopY=Math.floor((PopClick/4)); PopX=Math.floor(PopClick-(PopY*4)); PopY=TopYPos+80+(PopY*37)-8; PopX=TopXPos+470+(PopX*37)-8; if (PopX+document.getElementById("PopUp").scrollWidth>TopXPos+600) { PopX=(TopXPos+600)-document.getElementById("PopUp").scrollWidth; } if (PopY+document.getElementById("PopUp").scrollHeight>TopYPos+400) { PopY=(TopYPos+400)-document.getElementById("PopUp").scrollHeight; } break; } document.getElementById("PopUp").style.top=PopY; document.getElementById("PopUp").style.left=PopX; document.getElementById("PopUp").style.visibility="visible"; poptimer=setTimeout('AlignPop();', 200); } 
+function AlignPop() { document.getElementById("PopUp").style.visibility="visible"; switch (PopAlign) { case "char": PopY=TopYPos+(CharY*32)+8; PopX=TopXPos+(CharX*32)+32; if (PopY<TopYPos) { PopY=TopYPos; } if (PopY<TopYPos+10) { PopY=TopYPos+10; } if (PopX<TopXPos) { PopX=TopXPos; } if (PopX<TopXPos+10) { PopX=TopXPos+10; } if (PopX+document.getElementById("PopUp").scrollWidth>TopXPos+424) { PopX=(TopXPos+424)-document.getElementById("PopUp").scrollWidth; } if (PopY+document.getElementById("PopUp").scrollHeight>TopYPos+300) { PopY=(TopYPos+300)-document.getElementById("PopUp").scrollHeight; } if (PopY<TopYPos) { PopY=(TopYPos); } break; case "center": PopX=TopXPos+((448-document.getElementById("PopUp").scrollWidth)/2); PopY=TopYPos+((320-document.getElementById("PopUp").scrollHeight)/2); if (PopX+document.getElementById("PopUp").scrollWidth>TopXPos+628) { PopX=(TopXPos+628)-document.getElementById("PopUp").scrollWidth; } if (PopY+document.getElementById("PopUp").scrollHeight>TopYPos+320) { PopY=(TopYPos+320)-document.getElementById("PopUp").scrollHeight; } if (PopY<TopYPos) { PopY=(TopYPos); } break; case "login": PopX=TopXPos+((448-document.getElementById("PopUp").scrollWidth)/2); PopY=TopYPos+((260-document.getElementById("PopUp").scrollHeight)/2); if (PopX+document.getElementById("PopUp").scrollWidth>TopXPos+628) { PopX=(TopXPos+628)-document.getElementById("PopUp").scrollWidth; } if (PopY+document.getElementById("PopUp").scrollHeight>TopYPos+320) { PopY=(TopYPos+320)-document.getElementById("PopUp").scrollHeight; } break; case "click": PopY=Math.floor(PopClick/(MapSizeX+1)); PopX=PopClick-(PopY*(MapSizeX+1)); PopY=(PopY*32)+22; PopX=(PopX*32)+22; if (PopX+document.getElementById("PopUp").scrollWidth>TopXPos+424) { PopX=(TopXPos+424)-document.getElementById("PopUp").scrollWidth; } if (PopY+document.getElementById("PopUp").scrollHeight>TopYPos+300) { PopY=(TopYPos+300)-document.getElementById("PopUp").scrollHeight; } break; case "inven": PopY=Math.floor((PopClick/4)); PopX=Math.floor(PopClick-(PopY*4)); PopY=TopYPos+80+(PopY*37)-8; PopX=TopXPos+470+(PopX*37)-8; if (PopX+document.getElementById("PopUp").scrollWidth>TopXPos+600) { PopX=(TopXPos+600)-document.getElementById("PopUp").scrollWidth; } if (PopY+document.getElementById("PopUp").scrollHeight>TopYPos+400) { PopY=(TopYPos+400)-document.getElementById("PopUp").scrollHeight; } break; } document.getElementById("PopUp").style.top=PopY; document.getElementById("PopUp").style.left=PopX; } 
+
+
+
+
+// function EraseAll() { EraseStatic2();var D=document.getElementById("PlayerLayer"); if(D){ while(D.childNodes.length){ while(D.lastChild.childNodes.length){ D.lastChild.removeChild(D.lastChild.lastChild);}D.removeChild(D.lastChild);}} /* for (i=0;i<Obj.length;i++) { Di=D.childNodes[i]; IV=Obj[i].split("|"); if (t=document.getElementById(IV[2])) { Di.removeChild(t); eval('Di.removeChild('+IV[2]+'_2);'); if (t=document.getElementById(IV[2]+"_3")) { Di.removeChild(t); } if (t=document.getElementById(IV[2]+"_4")) { Di.removeChild(t); } if (t=document.getElementById(IV[2]+"_5")) { Di.removeChild(t); } if (t=document.getElementById(IV[2]+"_6")) { Di.removeChild(t); } if (t=document.getElementById(IV[2]+"_DAM")) { Di.removeChild(t); } if (t=document.getElementById(IV[2]+"_p")) { Di.removeChild(t); } if (t=document.getElementById(IV[2]+"_I")) { Di.removeChild(t); }}}*/ Obj.length=0; EraseItems(); EraseStatic(); if (document.getElementById(CharName)) { eval('docBody.removeChild('+CharName+');'); eval('docBody.removeChild('+CharName+'_2);'); if (document.getElementById(CharName+"_3")) { eval('docBody.removeChild('+CharName+'_3);'); } if (document.getElementById(CharName+"_4")) { eval('docBody.removeChild('+CharName+'_4);'); } if (document.getElementById(CharName+"_5")) { eval('docBody.removeChild('+CharName+'_5);'); } if (document.getElementById(CharName+"_6")) { eval('docBody.removeChild('+CharName+'_6);'); } if (document.getElementById(CharName+"_DAM")) { eval('docBody.removeChild('+CharName+'_DAM);'); } if (document.getElementById(CharName+"_p")) { eval('docBody.removeChild('+CharName+'_p);'); }} document.getElementById("fg").style.visibility="hidden"; } 
+// function EraseItems() { /* NItems=IList.length/4; for (i=0;i<NItems;i++) { if (document.getElementById('I'+i)) { eval('docBody.removeChild(I'+i+');'); } if (document.getElementById('I'+i+"_DAM")) { eval('docBody.removeChild(I'+i+'_DAM);'); }} LastItem=0;*/ IList=""; } 
+// function EraseStatic() { EraseStatic2(); if (document.getElementById("SDAM")) { eval('docBody.removeChild(SDAM);'); } if (document.getElementById("S_p")) { eval('docBody.removeChild(S_p);'); }} 
+// function UpdateItems() { RefDItems=0; var D=document.getElementById("IListLayer"),a,o,j; if(!D){ D=document.createElement("DIV"); D.setAttribute("id","IListLayer"); D.style.position="absolute"; D.style.top=D.style.left=0; docBody.appendChild(D); } a=D.childNodes; NItems=IList.length/4; while(a.length>NItems){ D.removeChild(D.lastChild);} for (j=0;j<NItems;j++) { i=(Ref+j)%NItems; if (!(o=a[j])) { o=document.createElement("IMG"); o.setAttribute("id","I"+j); o.style.position="absolute"; D.appendChild(o); } z=parseInt(IList.substring(i*4,(i*4)+2),16); c=IList.substring((i*4)+2,(i*4)+4); ItemY=Math.floor(z/(MapSizeX+1)); ItemX=z-(ItemY*(MapSizeX+1)); o.style.zIndex=z==FURNACEz?1:ItemY*12+11; o.onmousedown=new Function("ClickHere("+z+");"); o.style.left=TopXPos+ItemX*32; o.style.top=TopYPos+ItemY*32; if (c=="J0") { c=CandyGfx; } if (c=="S5") { if (SwitchIs) { c=SwitchIs; }} if (c=="S6") { if (SwitchIs) { c=SwitchIs; }} e=DirItem+'/O'+c+'.gif'; if (o.src != e) { o.src=e; }}} 
+// function RefreshStatic() { RefSItem=0; var D=document.getElementById("StaticLayer"),U,So,Sa,Sx,Sx_DAM,pvp=PvParea; PvParea=0;FURNACEz=-1; if(!D){ D=document.createElement("DIV"); D.setAttribute("id","StaticLayer"); D.style.position="absolute"; D.style.top=D.style.left=0; docBody.appendChild(D); } while(D.childNodes.length>S.length){ while(D.lastChild.childNodes.length){ D.lastChild.removeChild(D.lastChild.lastChild);}D.removeChild(D.lastChild);} while(D.childNodes.length<S.length){ So=document.createElement("DIV");So.style.position="absolute";So.style.top=So.style.left="0";D.appendChild(So);} for(i=0;i<S.length;i++){ if(!S[i])S[i]=""; cmd=""; IV=S[i].split("|"); if (IV[3]) { cmd=IV[3].charAt(0); RefSItem=1;} SDam=""; if (IV[0].charAt(0)=="0") { SDam="1"; } if (IV[0].charAt(0)=="1") { SDam="1"; } if (IV[0].charAt(0)=="2") { SDam="2"; } if (IV[0].charAt(0)=="3") { SDam="3"; } if (IV[0].charAt(0)=="4") { SDam="4"; } if (IV[0].charAt(0)=="5") { SDam="5"; } if (SDam) { IV[0]=IV[0].charAt(1); S[i]=S[i].substring(1,S[i].length); RefSItem=1; } ItemY=Math.floor(IV[4]/(MapSizeX+1)); ItemX=IV[4]-(ItemY*(MapSizeX+1)); Sx=(Sa=(So=D.childNodes[i]).childNodes)[0];eval("S"+i+"=Sx");Sx_DAM=Sa[1]; if (!Sx) { Sx=document.createElement("IMG"); Sx.setAttribute("id",'S'+i); So.appendChild(Sx); Sx.src=DirItem+"/OZ0.gif"; Sx.style.position="absolute"; } Sx.style.zIndex=2; if (!Sx_DAM) { Sx_DAM=document.createElement("IMG"); Sx_DAM.setAttribute("id","S"+i+'_DAM'); So.appendChild(Sx_DAM); Sx_DAM.src=DirItem+"/OZ0.gif"; Sx_DAM.style.position="absolute"; Sx_DAM.style.zIndex=253; } switch (IV[0]) { case "R": if (IV[4]>0) { So.style.visibility="visible"; Sx.style.visibility="visible"; Sx.onmousedown=new Function("ClickHere("+IV[4]+");"); Sx.style.left=TopXPos+ItemX*32; Sx.style.top=TopYPos+ItemY*32; if (IV[1].substring(0,2)=="J0") { e=DirItem+'/O'+CandyGfx+'.gif'; } else { e=DirItem+'/O'+IV[1].substring(0,2)+'.gif'; } if(Sx.src!=e){ Sx.src=e;} if(!SDam){ e=DirItem+"/OZ0.gif";if(Sx_DAM.src!=e){ Sx_DAM.src=e;}} while(Sa.length>2){ So.removeChild(So.lastChild);}} else { e=DirItem+"/OZ0.gif";if(Sx_DAM.src!=e){ Sx_DAM.src=e;}while(Sa.length>2){ So.removeChild(So.lastChild);}} break; case "KR": if (So) { So.style.visibility="hidden"; } DeadItem=1; break; case "KI": Sx.style.visibility="hidden"; DeadItem=1; break; case "I": if (IV[3]) { switch (cmd) { case "N": RefSItem=1; S[i]=IV[0]+"|"+IV[1]+"|"+IV[2]+"|"+IV[3].substring(1,IV[3].length)+IV[3].charAt(0)+"|"+((ItemY*(MapSizeX+1))+ItemX-(MapSizeX+1)); break; case "S": RefSItem=1; S[i]=IV[0]+"|"+IV[1]+"|"+IV[2]+"|"+IV[3].substring(1,IV[3].length)+IV[3].charAt(0)+"|"+((ItemY*(MapSizeX+1))+ItemX+(MapSizeX+1)); break; case "E": RefSItem=1; S[i]=IV[0]+"|"+IV[1]+"|"+IV[2]+"|"+IV[3].substring(1,IV[3].length)+IV[3].charAt(0)+"|"+((ItemY*(MapSizeX+1))+ItemX+1); break; case "W": RefSItem=1; S[i]=IV[0]+"|"+IV[1]+"|"+IV[2]+"|"+IV[3].substring(1,IV[3].length)+IV[3].charAt(0)+"|"+((ItemY*(MapSizeX+1))+ItemX-1); break; } IV=S[i].split("|"); ItemY=Math.floor(IV[4]/(MapSizeX+1)); ItemX=IV[4]-(ItemY*(MapSizeX+1)); } Sx.style.visibility="visible"; if (IV[1]=="S1") { PvParea=pvp=1; if (CharPoison) { IV[1]="S3"; }} Sx.onmousedown=new Function("ClickHere("+IV[4]+");"); Sx.style.left=TopXPos+ItemX*32; Sx.style.top=TopYPos+ItemY*32; if (IV[1]=="S5") { if (SwitchIs) { IV[1]=SwitchIs; }} e=DirItem+'/O'+IV[1].substring(0,2)+'.gif'; if (Sx.src != e) { Sx.src=e; } if(!SDam){ e=DirItem+"/OZ0.gif";if(Sx_DAM.src!=e){ Sx_DAM.src=e;}} while(Sa.length>2){ So.removeChild(So.lastChild);} Sx.style.zIndex=(ItemY+(Sx.height>32?1:0))*12+4; if (IV[1]=="S3") { IV[1]="S1"; } break; case "N": if(Sa.length>2&&So.childNodes[2].id!=IV[2]){ while(Sa.length>2){ So.removeChild(So.lastChild);}} if (IV[0]=="N") { if (IV[3].charAt(0)=="Q") { if (ECon==0) { IV[3]=IV[3].substring(1,IV[3].length); S[i]=IV[0]+"|"+IV[1]+"|"+IV[2]+"|"+IV[3]+"|"+((ItemY*(MapSizeX+1))+ItemX); } else { IV[3]="X"; IV[0]="X"; S[i]=IV[0]+"|"+IV[1]+"|"+IV[2]+"|X|"+((ItemY*(MapSizeX+1))+ItemX); }} switch (cmd) { case "N": RefSItem=1; S[i]=IV[0]+"|"+IV[1]+"|"+IV[2]+"|"+IV[3].substring(1,IV[3].length)+IV[3].charAt(0)+"|"+((ItemY*(MapSizeX+1))+ItemX-(MapSizeX+1)); break; case "S": RefSItem=1; S[i]=IV[0]+"|"+IV[1]+"|"+IV[2]+"|"+IV[3].substring(1,IV[3].length)+IV[3].charAt(0)+"|"+((ItemY*(MapSizeX+1))+ItemX+(MapSizeX+1)); break; case "E": RefSItem=1; S[i]=IV[0]+"|"+IV[1].substring(0,3)+"R"+IV[1].substring(4,IV[1].length)+"|"+IV[2]+"|"+IV[3].substring(1,IV[3].length)+IV[3].charAt(0)+"|"+((ItemY*(MapSizeX+1))+ItemX+1); break; case "W": RefSItem=1; S[i]=IV[0]+"|"+IV[1].substring(0,3)+"L"+IV[1].substring(4,IV[1].length)+"|"+IV[2]+"|"+IV[3].substring(1,IV[3].length)+IV[3].charAt(0)+"|"+((ItemY*(MapSizeX+1))+ItemX-1); break; } IV = S[i].split("|"); if (IV[0]!="X") { Sx.src=DirItem+"/OZ0.gif";Sx.style.visibility="hidden"; Sx_DAM.src=DirItem+"/OZ0.gif"; /*while(Sa.length>2){ So.removeChild(So.lastChild);}*/ RenderObj(So,3); }} else { if (IV[0]=="R") { RAtk=IV[1]; RDrp=IV[2]; }} break; case "B": Sx.onmousedown=new Function("ClickHere("+IV[4]+");"); e=DirBuild+"/"+IV[1]+".gif"; if (Sx.src != e) { Sx.src=e; Sx.style.visibility="hidden"; Sx.onload=new Function("BuildPos("+i+")"); }else{ Sx.style.left=TopXPos+ItemX*32-Sx.width+32; Sx.style.top=TopYPos+ItemY*32-Sx.height+32; Sx.style.visibility="visible"; } if(IV[1]=="FURNACE"){ FURNACEz=parseInt(IV[4]);} if(pvp&&Sx.height>32&&(Sx.height<65||IV[1]=="PYRAMID")){ Sx.style.zIndex=ItemY*12+2;} if(!SDam){ e=DirItem+"/OZ0.gif";if(Sx_DAM.src!=e){ Sx_DAM.src=e;}} while(Sa.length>2){ So.removeChild(So.lastChild);} break; default: e=DirItem+"/OZ0.gif"; if(Sx.src!=e){ Sx.src=e;} if(!SDam&&Sx_DAM.src!=e){ Sx_DAM.src=e;} while(Sa.length>2){ So.removeChild(So.lastChild);}} if (IV[3]) { switch (cmd) { case "*": RefSItem=1; if (CharMap=="G5e") { S[i]=IV[0]+"|SKYE|"+IV[2]+"||"+IV[4]; } else { if (CharMap=="E9e") { S[i]=IV[0]+"|WHEAT|"+IV[2]+"||"+IV[4]; } else { if (CharMap=="G8") { S[i]=IV[0]+"|TOMATO|"+IV[2]+"||"+IV[4]; } else { if (CharMap=="L1e") { S[i]=IV[0]+"|CHEESE|"+IV[2]+"||"+IV[4]; } else { S[i]=IV[0]+"|DEADTREE|"+IV[2]+"||"+IV[4]; }}}} break; case ".": RefSItem=1; S[i]=IV[0]+"|"+IV[1]+"|"+IV[2]+"|"+IV[3].substring(1,IV[3].length)+IV[3].charAt(0)+"|"+((ItemY*(MapSizeX+1))+ItemX); break; case "K": Sx.style.visibility="hidden"; break; case "R": Sx.style.visibility="visible"; RefSItem=1; S[i]=IV[0]+"|"+IV[1]+"|"+IV[2]+"|"+IV[3].substring(1,IV[3].length)+"|"+((ItemY*(MapSizeX+1))+ItemX); break; case "O": RefSItem=1; S[i]="D|"+IV[1]+"|"+IV[2]+"|"+IV[3].substring(1,IV[3].length)+IV[3].charAt(0)+"|"+((ItemY*(MapSizeX+1))+ItemX); while(Sa.length){ So.removeChild(So.lastChild);} break; } if (SDam) { IV[0]=IV[0].charAt(1); if (IV[4]!=0) { Sx_DAM.style.left=TopXPos+ItemX*31; Sx_DAM.style.top=TopYPos+ItemY*31-13; e=DirTile+"/DAM"+SDam+".gif"; } else { e=DirItem+"/OZ0.gif"; }} else { e=DirItem+"/OZ0.gif"; } if (Sx_DAM.src != e) { Sx_DAM.src=e; }} Sx_DAM.style.visibility=Sx_DAM.src==DirItem+"/OZ0.gif"?"hidden":"visible"; } if (CharMap=="J6") { if (Flag != LastFlag) { document.getElementById("fg").innerHTML="<b><font color=white>&nbsp;"+Flag+"&nbsp;</font></b>"; document.getElementById("fg").style.visibility="visible"; if (Flag.charAt(0)==" ") { document.getElementById("fg").style.backgroundColor="red"; } else { document.getElementById("fg").style.backgroundColor="blue"; }}} else { document.getElementById("fg").style.visibility="hidden"; }} 
+// function BuildPos(i){ if(!S[i])return; var o=document.getElementById("S"+i),z=parseInt(S[i].split("|")[4]),ItemY=Math.floor(z/(MapSizeX+1)),ItemX=z-(ItemY*(MapSizeX+1)); o.style.left=(TopXPos+ItemX*32)-o.width+32; o.style.top=(TopYPos+ItemY*32)-o.height+32; o.style.visibility="visible"; } 
+// function UpdateObjs() { if (CharObj=="NEW") { HPOP(); } else { if (CharMap=="G0e") { Que=""; Skill=""; IStamp=CStamp; HPOP(); StepHere(CharZ+MapSizeX); } if (MoveTo==1) { Moving(); } else { if (Que) { ProcessQue(); }} if (TmpObj) { if (RefRPG>4) { eval('docBody.removeChild('+CharName+'_I);'); TmpObj=""; } else { a=TmpObj.substring(1,3); if (!document.getElementById(CharName+"_I")) { eval(CharName+'_I=document.createElement(\"IMG\");'); eval(CharName+'_I.setAttribute(\"id\",\"'+CharName+'_I\");'); eval('docBody.appendChild('+CharName+'_I);'); eval(CharName+'_I.style.position=\"absolute\";'); eval(CharName+'_I.style.zIndex=\"253\";'); } eval(CharName+'_I.style.left='+(TopXPos+(CharX*32))+';'); eval(CharName+'_I.style.top='+(TopYPos+(CharY*32)-45)+';'); eval(CharName+'_I.style.height=28;'); eval(CharName+'_I.style.width=28;'); e=DirItem+"/O"+a+".gif"; if (document.getElementById(CharName+"_I").src != e) { eval(CharName+'_I.setAttribute(\"src\",e);'); }}} var Do=document.getElementById("PlayerLayer"),D,D2=[]; if(!Do){ Do=document.createElement("DIV"); Do.setAttribute("id","PlayerLayer"); Do.style.position="absolute"; Do.style.top=Do.style.left=0; docBody.appendChild(Do); } while(Do.childNodes.length>Obj.length){ while(Do.lastChild.childNodes.length){ Do.lastChild.removeChild(Do.lastChild.lastChild);}Do.removeChild(Do.lastChild);} if(Do.childNodes.length>1&&Ref!=Objlastr){ Do.appendChild(Do.removeChild(Do.firstChild));Objlastr=Ref;} for (i=0;i<Obj.length;i++) { if (Obj[i]!="delete") { IV = Obj[i].split("|"); D=document.getElementById(IV[2]); if(D){ D=D.parentNode;}else{ D=document.createElement("DIV");D.style.position="absolute";D.style.top=D.style.left="0";Do.appendChild(D);} RenderObj(D,5); if (IV[3]) { cmd=IV[3].charAt(0); if (cmd=="N") { ItemY=ItemY-1; Obj[i]=IV[0]+"|"+IV[1]+"|"+IV[2]+"|"+IV[3].substring(1,IV[3].length)+"|"+((ItemY*(MapSizeX+1))+ItemX); } if (cmd=="S") { ItemY=ItemY+1; Obj[i]=IV[0]+"|"+IV[1]+"|"+IV[2]+"|"+IV[3].substring(1,IV[3].length)+"|"+((ItemY*(MapSizeX+1))+ItemX); } if (cmd=="W") { ItemX=ItemX-1; Obj[i]=IV[0]+"|"+IV[1].substring(0,3)+"L"+IV[1].substring(4,IV[1].length)+"|"+IV[2]+"|"+IV[3].substring(1,IV[3].length)+"|"+((ItemY*(MapSizeX+1))+ItemX); } if (cmd=="E") { ItemX=ItemX+1; Obj[i]=IV[0]+"|"+IV[1].substring(0,3)+"R"+IV[1].substring(4,IV[1].length)+"|"+IV[2]+"|"+IV[3].substring(1,IV[3].length)+"|"+((ItemY*(MapSizeX+1))+ItemX); } if (cmd==".") { Obj[i]=IV[0]+"|"+IV[1]+"|"+IV[2]+"|"+IV[2]+"|"+IV[3].substring(1,IV[3].length); } if (cmd>"0" && cmd<"6") { if (!document.getElementById(IV[2]+"_DAM")) { eval(IV[2]+'_DAM=document.createElement(\"IMG\");'); eval(IV[2]+'_DAM.setAttribute(\"id\",\"'+IV[2]+'_DAM\");'); eval('D.appendChild('+IV[2]+'_DAM);'); eval(IV[2]+'_DAM.style.position=\"absolute\";'); eval(IV[2]+'_DAM.style.zIndex=\"253\";'); } eval(IV[2]+'_DAM.style.left='+(TopXPos+(ItemX*32))+';'); eval(IV[2]+'_DAM.style.top='+(TopYPos+(ItemY*32)-25)+';'); e=DirTile+"/DAM"+cmd+".gif"; if (document.getElementById(IV[2]+"_DAM").src != e) { eval(IV[2]+'_DAM.setAttribute(\"src\",\"'+DirTile+'/DAM'+cmd+'.gif\");'); }} else { if (document.getElementById(IV[2]+"_DAM")) { eval('D.removeChild('+IV[2]+'_DAM);'); }} if (cmd=="I" && IV[3].charAt(1)>="A") { a=IV[3].substring(1,3); IV[3]=IV[3].substring(3,IV[3].length)+"I"; Obj[i]=IV[0]+"|"+IV[1]+"|"+IV[2]+"|"+IV[3]+"|"+IV[4]; if (!document.getElementById(IV[2]+"_I")) { eval(IV[2]+'_I=document.createElement(\"IMG\");'); eval(IV[2]+'_I.setAttribute(\"id\",\"'+IV[2]+'_I\");'); eval('D.appendChild('+IV[2]+'_I);'); eval(IV[2]+'_I.style.position=\"absolute\";'); eval(IV[2]+'_I.style.zIndex=\"253\";'); } eval(IV[2]+'_I.style.left='+(TopXPos+(ItemX*32))+';'); eval(IV[2]+'_I.style.top='+(TopYPos+(ItemY*32)-45)+';'); eval(IV[2]+'_I.style.height=28;'); eval(IV[2]+'_I.style.width=28;'); e=DirItem+'/O'+a+'.gif'; if (document.getElementById(IV[2]+"_I").src != e) { eval(IV[2]+'_I.setAttribute(\"src\",\"'+DirItem+'/O'+a+'.gif\");'); }} else { if (document.getElementById(IV[2]+"_I")) { if (RefRPG>4) { eval('D.removeChild('+IV[2]+'_I);'); }}} if (cmd=="O") { eval('D.removeChild('+IV[2]+');'); eval('D.removeChild('+IV[2]+'_2);'); if (document.getElementById(IV[2]+"_3")) { eval('D.removeChild('+IV[2]+'_3);'); } if (document.getElementById(IV[2]+"_4")) { eval('D.removeChild('+IV[2]+'_4);'); } if (document.getElementById(IV[2]+"_5")) { eval('D.removeChild('+IV[2]+'_5);'); } if (document.getElementById(IV[2]+"_6")) { eval('D.removeChild('+IV[2]+'_6);'); } if (document.getElementById(IV[2]+"_DAM")) { eval('D.removeChild('+IV[2]+'_DAM);'); } if (document.getElementById(IV[2]+"_p")) { eval('D.removeChild('+IV[2]+'_p);'); } Do.removeChild(D); Obj[i]="delete"; }}}}}} 
+// function RenderObj(D,z) { var D1; if(!D){ D=(D=document.getElementById(IV[2]))&&D.parent?D.parent:docBody;} if (IV[0]!="T") { ItemY=Math.floor(IV[4]/(MapSizeX+1)); ItemX=IV[4]-(ItemY*(MapSizeX+1)); ItemZ=ItemY*12+(z||10); X=TopXPos+(ItemX*32); Y=TopYPos+(ItemY*32); d="R"; if ( IV[1].charAt(3)=="L") { d="L"; } if (!(D1=document.getElementById(IV[2]))) { D1=eval(IV[2]+'=document.createElement(\"IMG\");'); D1.setAttribute("id",IV[2]); eval(IV[2]+'_2=document.createElement(\"IMG\");'); eval(IV[2]+'_2.setAttribute(\"id\",\"'+IV[2]+'_2\");'); D.appendChild(D1); eval('D.appendChild('+IV[2]+'_2);'); } D1.onmousedown=new Function("ClickHere("+IV[4]+");"); D1.style.position="absolute"; D1.style.left=X; D1.style.top=Y; D1.style.visibility="visible"; D1.style.zIndex=ItemZ; eval(IV[2]+'_2.onmousedown=new Function(\"ClickHere('+(IV[4]-(MapSizeX+1))+');\");'); eval(IV[2]+'_2.style.position=\"absolute\";'); eval(IV[2]+'_2.style.left='+(X)+';'); if (document.getElementById(IV[2]+"_DAM")) { eval(IV[2]+'_DAM.style.left='+(X)+';'); eval(IV[2]+'_DAM.style.top='+(Y-25)+';'); } eval(IV[2]+'_2.style.top='+(Y-16)+';'); fb=""; if (IV[1].indexOf("A5")>-1) { fb="A5"; } if (IV[1].indexOf("A6")>-1) { fb="A6"; } if (IV[1].indexOf("A7")>-1) { fb="A7"; } if (fb) { if (Map.charAt(IV[4]*2)=="U") { e=DirItem+'/O'+fb; if (D1.src != e+".gif") { D1.setAttribute("src",e+'.gif'); } e=DirItem+'/OZ0'; if (document.getElementById(IV[2]+"_2").src != e+".gif") { eval(IV[2]+'_2.setAttribute(\"src\",\"'+e+'.gif\");'); } if (document.getElementById(IV[2]+"_3")) { eval('D.removeChild('+IV[2]+'_3);'); } if (document.getElementById(IV[2]+"_4")) { eval('D.removeChild('+IV[2]+'_4);'); } if (document.getElementById(IV[2]+"_5")) { eval('D.removeChild('+IV[2]+'_5);'); } if (document.getElementById(IV[2]+"_6")) { eval('D.removeChild('+IV[2]+'_6);'); }} else { fb=""; }} if (fb=="") { if (D1.src != DirChar+'/CHR'+IV[1].charAt(0)+IV[1].charAt(2)+d+'.gif' ) { eval(IV[2]+'.setAttribute(\"src\",\"'+DirChar+'/CHR'+IV[1].charAt(0)+IV[1].charAt(2)+d+'.gif\");'); } if (D1.src != DirChar+'/CHRH'+IV[1].charAt(0)+IV[1].charAt(1)+d+'.gif' ) { eval(IV[2]+'_2.setAttribute(\"src\",\"'+DirChar+'/CHRH'+IV[1].charAt(0)+IV[1].charAt(1)+d+'.gif\");'); } if (document.getElementById(IV[2]+"_p")) { eval('D.removeChild('+IV[2]+'_p);'); } eval(IV[2]+'_2.style.visibility=\"visible\";'); eval(IV[2]+'_2.style.zIndex=ItemZ;'); if (IV[1].length>3) { a=IV[1].substring(4,IV[1].length); if (a.indexOf("L")>-1) { if (!document.getElementById(IV[2]+"_3")) { eval(IV[2]+'_3=document.createElement(\"IMG\");'); eval(IV[2]+'_3.setAttribute(\"id\",\"'+IV[2]+'_3\");'); eval('D.appendChild('+IV[2]+'_3);'); eval(IV[2]+'_3.style.position=\"absolute\";'); } eval(IV[2]+'_3.style.zIndex=ItemZ;'); eval(IV[2]+'_3.onmousedown=new Function(\"ClickHere('+(IV[4]-(MapSizeX+1))+');\");'); eval(IV[2]+'_3.style.left='+(X)+';'); eval(IV[2]+'_3.style.top='+(Y-24)+';'); if (a.indexOf("L")>-1) { e=DirChar+'/CHI'+a.substring(a.indexOf("L"),a.indexOf("L")+2)+d; } else { e=DirChar+'/CHI'+a.substring(a.indexOf("M"),a.indexOf("M")+2)+d; } if (document.getElementById(IV[2]+"_3").src != e+".gif") { eval(IV[2]+'_3.setAttribute(\"src\",\"'+e+'.gif\");'); }} else { if (a.indexOf("M")>-1) { if (!document.getElementById(IV[2]+"_3")) { eval(IV[2]+'_3=document.createElement(\"IMG\");'); eval(IV[2]+'_3.setAttribute(\"id\",\"'+IV[2]+'_3\");'); eval('D.appendChild('+IV[2]+'_3);'); eval(IV[2]+'_3.style.position=\"absolute\";'); } eval(IV[2]+'_3.style.zIndex=ItemZ;'); eval(IV[2]+'_3.onmousedown=new Function(\"ClickHere('+(IV[4])+');\");'); eval(IV[2]+'_3.style.left='+(X)+';'); eval(IV[2]+'_3.style.top='+(Y-20)+';'); e=DirChar+'/CHI'+a.substring(a.indexOf("M"),a.indexOf("M")+2)+d; if (document.getElementById(IV[2]+"_3").src != e+".gif") { eval(IV[2]+'_3.setAttribute(\"src\",\"'+e+'.gif\");'); }} else { if (document.getElementById(IV[2]+"_3")) { eval('D.removeChild('+IV[2]+'_3);'); }}} if (a.indexOf("N")>-1) { if (!document.getElementById(IV[2]+"_6")) { eval(IV[2]+'_6=document.createElement(\"IMG\");'); eval(IV[2]+'_6.setAttribute(\"id\",\"'+IV[2]+'_6\");'); eval('D.appendChild('+IV[2]+'_6);'); eval(IV[2]+'_6.style.position=\"absolute\";'); } eval(IV[2]+'_6.style.zIndex=ItemZ;'); eval(IV[2]+'_6.onmousedown=new Function(\"ClickHere('+(IV[4])+');\");'); eval(IV[2]+'_6.style.left='+(X)+';'); if (a.indexOf("N4")>-1) { eval(IV[2]+'_6.style.top='+(Y-20)+';'); } else { if (a.indexOf("N2")>-1) { eval(IV[2]+'_6.style.top='+(Y-20)+';'); } else { if (a.indexOf("N8")>-1) { eval(IV[2]+'_6.style.top='+(Y-20)+';'); } else { eval(IV[2]+'_6.style.top='+(Y)+';'); }}} e=DirChar+'/CHI'+a.substring(a.indexOf("N"),a.indexOf("N")+2)+d; if (document.getElementById(IV[2]+"_6").src != e+".gif") { eval(IV[2]+'_6.setAttribute(\"src\",\"'+e+'.gif\");'); }} else { if (document.getElementById(IV[2]+"_6")) { eval('D.removeChild('+IV[2]+'_6);'); }} if (a.indexOf("O")>-1) { if (!document.getElementById(IV[2]+"_4")) { eval(IV[2]+'_4=document.createElement(\"IMG\");'); eval(IV[2]+'_4.setAttribute(\"id\",\"'+IV[2]+'_4\");'); eval('D.appendChild('+IV[2]+'_4);'); eval(IV[2]+'_4.style.position=\"absolute\";'); } eval(IV[2]+'_4.style.zIndex=ItemZ;'); eval(IV[2]+'_4.onmousedown=new Function(\"ClickHere('+(IV[4])+');\");'); eval(IV[2]+'_4.style.left='+(X)+';'); eval(IV[2]+'_4.style.top='+(Y)+';'); e=DirChar+'/CHI'+a.substring(a.indexOf("O"),a.indexOf("O")+2)+d; if (document.getElementById(IV[2]+"_4").src != e+".gif") { eval(IV[2]+'_4.setAttribute(\"src\",\"'+e+'.gif\");'); }} else { if (document.getElementById(IV[2]+"_4")) { eval('D.removeChild('+IV[2]+'_4);'); }} if (a.indexOf("P")>-1 || a.indexOf("B")>-1) { if (!document.getElementById(IV[2]+"_5")) { eval(IV[2]+'_5=document.createElement(\"IMG\");'); eval(IV[2]+'_5.setAttribute(\"id\",\"'+IV[2]+'_5\");'); eval('D.appendChild('+IV[2]+'_5);'); eval(IV[2]+'_5.style.position=\"absolute\";'); } eval(IV[2]+'_5.style.zIndex=ItemZ;'); eval(IV[2]+'_5.onmousedown=new Function(\"ClickHere('+(IV[4])+');\");'); if (IV[1].charAt(3)=="L") { eval(IV[2]+'_5.style.left='+(X+2)+';'); if (a.indexOf("B")>-1) { eval(IV[2]+'_5.style.left='+(X-8)+';'); }} else { eval(IV[2]+'_5.style.left='+(X-2)+';'); if (a.indexOf("B")>-1) { eval(IV[2]+'_5.style.left='+(X+8)+';'); }} if (a.indexOf("P")>-1) { e=DirChar+'/CHI'+a.substring(a.indexOf("P"),a.indexOf("P")+2)+d+'.gif'; eval(IV[2]+'_5.style.top='+(Y-14)+';'); } else { e=DirChar+'/CHI'+a.substring(a.indexOf("B"),a.indexOf("B")+2)+d+'.gif'; eval(IV[2]+'_5.style.top='+(Y-6)+';'); } if (document.getElementById(IV[2]+"_5").src != e) { eval(IV[2]+'_5.setAttribute(\"src\",\"'+e+'\");'); }} else { if (document.getElementById(IV[2]+"_5")) { eval('D.removeChild('+IV[2]+'_5);'); }}}}} else { if (IV[2]=="F") { if (document.getElementById("S_p")) { eval('D.removeChild(S_p);'); } eval('S_p=document.createElement(\"p\");'); eval('S_p.setAttribute(\"id\",\"S_p\");'); eval('S_t=document.createTextNode(\"-'+IV[1].substring(1,IV[1].length)+'-\");'); eval('S_p.appendChild(S_t);'); eval('D.appendChild(S_p);'); ItemY=Math.floor(IV[4]/(MapSizeX+1)); ItemX=IV[4]-(ItemY*(MapSizeX+1)); eval('S_p.style.position=\"absolute\";'); eval('S_p.style.left='+(TopXPos+(ItemX*32)+21)+';'); eval('S_p.style.top='+(TopYPos+(ItemY*32)+4)+';'); eval('S_p.style.fontWeight=\"bold\";'); eval('S_p.style.color=\"black\";'); if (IV[1].charAt(0)=="R") { eval('S_p.style.backgroundColor=\"#ffc6c6\";'); } else { eval('S_p.style.backgroundColor=\"#c6ffff\";'); }}}} 
+// function RenderDam() { DAM=Math.round((5/MaxHit)*CharHit); if (DAM<"1") { DAM="1"; } if (DAM>"5") { DAM="5"; } if (!document.getElementById(CharName+"_DAM")) { eval(CharName+'_DAM=document.createElement(\"IMG\");'); eval(CharName+'_DAM.setAttribute(\"id\",\"'+CharName+'_DAM\");'); eval('docBody.appendChild('+CharName+'_DAM);'); eval(CharName+'_DAM.style.position=\"absolute\";'); eval(CharName+'_DAM.style.zIndex=\"253\";'); } eval(CharName+'_DAM.onmousedown=new Function(\"ClickHere('+(CharZ)+');\");'); eval(CharName+'_DAM.style.left='+(TopXPos+(CharX*31))+';'); eval(CharName+'_DAM.style.top='+(TopYPos+(CharY*31)-25)+';'); e=DirTile+"/DAM"+DAM+".gif"; if (document.getElementById(CharName+"_DAM").src != e) { eval(CharName+'_DAM.setAttribute(\"src\",\"'+DirTile+'/DAM'+DAM+'.gif\");'); }} 
+// function CancelKey(evt) { var evt = (evt) ? evt : ((window.event) ? window.event : ""); evt.returnValue = false; evt.preventDefault(); return false; } 
+function Null() { } 
+function RightClick(event){ } 
+function MouseClick(e) { return false; } 
+function textmenu() { return false; } 
+// function ProcessInput(e) { if (!e) { e=window.event;} if (e.keyCode) { i=e.keyCode; } else { if (e.which) { i=e.which; }} Shifted=0; if (e.shiftKey) { Shifted=1; } if (i==59) { if (Shifted) { i=58; }} DecodeKey(i); return false; e.returnValue = false; } 
+// function DecodeKey(i) { IStamp=CStamp; K=0; if (VKey) { K=VKey; } if (i==27) { ChatLine=""; KCap=0; RefChat=1; } if (i==8) { if (Shifted || ShiftSet) { ChatLine=""; KCap=0; RefChat=1; } else { ChatLine=ChatLine.substring(0,ChatLine.length-1); K=8; }} if (document.getElementById("cursor").offsetLeft>400) { if (i != 13) { i=0; }} if (Retreat==0) { if (TradeOn==0) { if (i==37) { StepHere(CharZ-1); } if (i==38) { StepHere(CharZ-MapSizeX-1); } if (i==39) { StepHere(CharZ+1); } if (i==40) { StepHere(CharZ+MapSizeX+1); }}} if (TileMode) { AdminTileMode(i); } else { if (i==32) { K=32; } if (i>64 && i<91) { K=i+32; if (Shifted || ShiftSet) { K=i; }} if (i>47 && i<58) { K=i; if (Shifted || ShiftSet) { K=i-16; if (K==38) { K=94;} if (K==40) { K=42;} if (K==39) { K=38;} if (K==41) { K=40;} if (K==32) { K=41;}}} if (i==50) { if (Shifted || ShiftSet) { K=39; }} if (i==187) { K=61; if (Shifted || ShiftSet) { K=43; }} if (i==61) { K=61; if (Shifted || ShiftSet) { K=43; }} if (i==59) { K=59; } if (i==58) { K=58; } if (i==186) { K=59; if (Shifted || ShiftSet) { K=58; }} if (i==219) { K=91; } if (i==221) { K=93; } if (i==188) { K=44; if (Shifted || ShiftSet) { K=91; }} if (i==190) { K=46; if (Shifted || ShiftSet) { K=93; }} if (i==189) { K=45; } if (i==191) { if (Shifted || ShiftSet) { K=63; } else { K=47; }} if (i==222) { K=39; } if (i==107) { K=61; if (Shifted || ShiftSet) { K=43; }} if (i==13) { if (SendChat=="") { if (ChatLine.substring(0,2)=="/m") { if (window.XMLHttpRequest) { who=new XMLHttpRequest(); } else { if (window.ActiveXObject) { who=new ActiveXObject("Microsoft.XMLHTTP"); }} MsgSent(); ChatLine=ChatLine.replace(/\#/g,"%23"); ChatLine=ChatLine.replace(/\+/g,"%2B"); ChatLine=ChatLine.replace(/\=/g,"%3D"); ChatLine=ChatLine.replace(/\=/g,"%3D"); ChatLine=ChatLine.replace(/\&/g,"%26"); if (ChatLine.substr(ChatLine.indexOf(" ",ChatLine.indexOf(" ")+1)+1,ChatLine.length)) { who.open('GET', WhoServer+'?N='+CharName+'&P='+WhoKey+'&C=S&SC='+ChatLine, true); who.send(null); NewChatLine=ChatLine.substr(0,ChatLine.indexOf(" ",ChatLine.indexOf(" ")+1)+1); } ChatLine=""; } else { if (CMode) { CMode=0; RefChat=1; document.getElementById("msgs").src="http://queville.com/images/buttons/d_msgs.gif"; }} if (ChatLine.substring(0,1)=="/") { if (Admin) { AdminExecChat(); }} if (CharStatus=="MUTE") { Cht=Cht+"<br>"+CharName+": <font color=red>You Have Been Muted!</font>"; RefChat=1; ChatLine=""; K=0; } if (ChatLine) { SendChat=ChatLine; Cht=Cht+"<br>"+CharName+": "+SendChat; } if (CharStatus!="MUTE") { K=13; if (KCap==0) { ChatLine=""; }} if (NewChatLine) { ChatLine=NewChatLine; NewChatLine=""; RefreshChat(); }} else { K=0; }} if (K>0) { if (K>13) { ChatLine=ChatLine+String.fromCharCode(eval(K)); if (Admin) { AdminChat(); }} IStamp=CStamp; RefreshChat(); }} Shifted=0; if (i==1) { ShiftSet=1-ShiftSet; Keys(1); } else { if (ShiftSet) { ShiftSet=0; Keys(1); }}} 
+// function Reset() { HPOP(); EraseAll(); AllowScroll=0; ToDo="C=RS"; } 
+// function RefreshChat() { RefChat=0; spacer=ChatLine; while (spacer.indexOf(" ")>-1) { spacer=spacer.substring(0,spacer.indexOf(" "))+"&nbsp;"+spacer.substring(spacer.indexOf(" ")+1,spacer.length); } if (CMode) { Msgs=""; while (M.length>NMsgs) { M.shift(); } for (Ci=0;Ci<M.length;Ci++) { Msgs=Msgs+M[Ci]+"<br>"; } document.getElementById("CHAT").innerHTML="<br><font face=arial size=3px color=Navy><b>"+Msgs+"<br>"+CharName+": "+spacer+"<img name=cursor id=cursor src=\""+DirTile+"/Q5.png\" height=18 width=10 style=\"position:absolute; \"></font></b>"; } else { while (Cht.indexOf("~")>-1) { Cht=Cht.substring(0,Cht.indexOf("~"))+ItemID(Cht.substring(Cht.indexOf("~")+1,Cht.indexOf("~")+3))+Cht.substring(Cht.indexOf("~")+3,Cht.length); } document.getElementById("CHAT").innerHTML="<br><font face=arial size=3px color=Navy><b>"+TCht+Cht+"<br>"+CharName+": "+spacer+"<img name=cursor id=cursor src=\""+DirTile+"/Q5.png\" height=18 width=10 style=\"position:absolute; \"></font></b>"; } a=document.getElementById("CHAT").scrollHeight-CHigh; if (Scroll>a) { Scroll=a; } a=-(document.getElementById("CHAT").scrollHeight)+CHigh+Scroll; document.getElementById("CHAT").style.top=a; } 
+// function ChatMessage(a) { Scroll=0; document.getElementById("CHAT").innerHTML="<b>"+a+"</b>"; a=-(document.getElementById("CHAT").scrollHeight)+CHigh+Scroll; document.getElementById("CHAT").style.top=a; } 
+// function ChatDown(){ Scroll=Scroll-20; if (Scroll<0) { Scroll=0; } RefChat=1; } 
+// function ChatUp(){ Scroll=Scroll+20; a=document.getElementById("CHAT").scrollHeight-CHigh; if (Scroll>a) { Scroll=a; } RefChat=1; } 
+// function Keys(a) { if (a==0) { if (Keyboard) { HPOP(); } else { a=1; }} if (a==1) { PopAlign="center"; Keyboard="<center><br> "; Add2Key(49); Add2Key(50); Add2Key(51); Add2Key(52); Add2Key(53); Add2Key(54); Add2Key(55); Add2Key(56); Add2Key(57); Add2Key(48); Add2Key(8); Keyboard=Keyboard+" <br><img src="+DirKeys+"/blank.gif height=32 width=16>"; Add2Key(81); Add2Key(87); Add2Key(69); Add2Key(82); Add2Key(84); Add2Key(89); Add2Key(85); Add2Key(73); Add2Key(79); Add2Key(80); Add2Key(107); Keyboard=Keyboard+" &nbsp; <br><img src="+DirKeys+"/blank.gif height=32 width=32>"; Add2Key(65); Add2Key(83); Add2Key(68); Add2Key(70); Add2Key(71); Add2Key(72); Add2Key(74); Add2Key(75); Add2Key(76); Add2Key(13); Keyboard=Keyboard+"<br><img src="+DirKeys+"/blank.gif height=32 width=16>"; Keyboard=Keyboard+"<a href=\"javascript: DecodeKey(1); \">"; if (ShiftSet) { Keyboard=Keyboard+"<img src="+DirKeys+"/key-shifton.gif height=32 width=32 border=0></a> "; } else { Keyboard=Keyboard+"<img src="+DirKeys+"/key-shiftoff.gif height=32 width=32 border=0></a> "; } Add2Key(90); Add2Key(88); Add2Key(67); Add2Key(86); Add2Key(66); Add2Key(78); Add2Key(77); Add2Key(188); Add2Key(190); Add2Key(191); Keyboard=Keyboard+"<br><img src="+DirKeys+"/blank.gif height=32 width=96>"; Add2Key(32); Add2Key(58); Add2Key(59); Add2Key(109); Keyboard=Keyboard+"</center><p>"; POP(Keyboard); }} 
+// function Add2Key(a) { dckw=32; b=""; if (ShiftSet) { b="c"; } if (a>47 && a<58) { b=b+String.fromCharCode(a); } if (a>64 && a<91) { b=b+String.fromCharCode(a+32); } if (a==13) { b="enter"; } if (a==32) { b="space"; dckw=96; } if (a==8) { b=b+"back"; } if (a==188) { b=b+"comma"; } if (a==190) { b=b+"period"; } if (a==107) { b=b+"equal"; } if (a==191) { b=b+"slash"; } if (a==58) { b="colen"; } if (a==59) { b="simi"; } if (a==109) { b="minus"; } Keyboard=Keyboard+"<a href=\"javascript: DecodeKey("+a+"); \"><img src="+DirKeys+"/key-"+b+".gif height=32 width="+dckw+" border=0></a> "; } 
+// function Comma(number) { number = '' + number; if (number.length > 3) { mod = number.length % 3; output = (mod > 0 ? (number.substring(0,mod)) : ''); for (i=0 ; i < Math.floor(number.length / 3); i++) { if ((mod == 0) && (i == 0)) output += number.substring(mod+ 3 * i, mod + 3 * i + 3); else output+= ',' + number.substring(mod + 3 * i, mod + 3 * i + 3); } return (output); } else return number; } 
+// function Logout() { POP("Logging Out..."); ToDo="C=O"; } 
+
+function CLOTHES(a) { 
+ if (a==0) {
+  Game="<p align=center>Select Clothes:<p align=center>";
+  b=InitalObj.substring(0,1);
+  if (CharMap=="B2e" || CharMap=="A2e") {
+   Game=Game+"<a href=javascript:Null(); onmousedown=javascript:CLOTHES(\"1\");><img src="+DirChar+"/CHR"+b+"1R.gif border=0 height=48 width=48></a>";
+   Game=Game+"<a href=javascript:Null(); onmousedown=javascript:CLOTHES(\"2\");><img src="+DirChar+"/CHR"+b+"2R.gif border=0 height=48 width=48></a>";
+   Game=Game+"<a href=javascript:Null(); onmousedown=javascript:CLOTHES(\"3\");><img src="+DirChar+"/CHR"+b+"3R.gif border=0 height=48 width=48></a>";
+   Game=Game+"<a href=javascript:Null(); onmousedown=javascript:CLOTHES(\"4\");><img src="+DirChar+"/CHR"+b+"4R.gif border=0 height=48 width=48></a>";
+   Game=Game+"<a href=javascript:Null(); onmousedown=javascript:CLOTHES(\"5\");><img src="+DirChar+"/CHR"+b+"5R.gif border=0 height=48 width=48></a>";
+  } else {
+   Game="Closed.";
+  }
+ } else {
+  HPOP(); ToDo="C=C&J="+a;
+ }
+ POP(Game);
+}
+
+function HAIR(a) {
+ Game="<p align=center>Select new hair style:<p align=center>";
+ if (a==0) {
+  Game=Game+"&nbsp; &nbsp;<a href=javascript:Null(); onmousedown=\"javascript:HAIR(\'M\');\">MALE</a> &nbsp; &nbsp; <a href=javascript:Null(); onmousedown=\"javascript:HAIR(\'F\');\">FEMALE</a>";
+  Game=Game+"<br><img onmousedown=\"HAIR(\'M\');\" src="+DirChar+"/CHRHM1R.gif height=48 width=48> &nbsp; &nbsp; <img onmousedown=\"HAIR(\'F\');\" src="+DirChar+"/CHRHF1L.gif height=48 width=48>";
+ } else {
+  if (a=="M" || a=="F") {
+   Game=Game+"<a href=javascript:Null(); onmousedown=\"javascript:HAIR(\'"+a+"1\');\"><img src="+DirChar+"/CHRH"+a+"1R.gif border=0 height=48 width=48></a> ";
+   Game=Game+"<a href=javascript:Null(); onmousedown=\"javascript:HAIR(\'"+a+"2\');\"><img src="+DirChar+"/CHRH"+a+"2R.gif border=0 height=48 width=48></a> ";
+   Game=Game+"<a href=javascript:Null(); onmousedown=\"javascript:HAIR(\'"+a+"3\');\"><img src="+DirChar+"/CHRH"+a+"3R.gif border=0 height=48 width=48></a> ";
+   Game=Game+"<p><a href=javascript:Null(); onmousedown=\"javascript:HAIR(\'"+a+"4\');\"><img src="+DirChar+"/CHRH"+a+"4R.gif border=0 height=48 width=48></a>";
+   Game=Game+"<a href=javascript:Null(); onmousedown=\"javascript:HAIR(\'"+a+"5\');\"><img src="+DirChar+"/CHRH"+a+"5R.gif border=0 height=48 width=48></a>";
+   Game=Game+"<a href=javascript:Null(); onmousedown=\"javascript:HAIR(\'"+a+"6\');\"><img src="+DirChar+"/CHRH"+a+"6R.gif border=0 height=48 width=48></a>";
+   Game=Game+"<a href=javascript:Null(); onmousedown=\"javascript:HAIR(\'"+a+"7\');\"><img src="+DirChar+"/CHRH"+a+"7R.gif border=0 height=48 width=48></a>";
+  } else {
+   HPOP();
+   if (a.length==2) {
+    ToDo="C=HS&J="+a+InitalObj.substring(2,3);
+   }
+  }
+ }
+ POP(Game);
+}
+
+function RefreshMap() {
+ if (CharMap=="D8") {
+  if (BridgeClosed) {
+   Map=Map.substring(0,12)+"I0I0I0"+Map.substring(18,Map.length);
+   Map=Map.substring(0,40)+"I0I0I0"+Map.substring(46,Map.length);
+   Map=Map.substring(0,68)+"I0I0I0"+Map.substring(74,Map.length);
+   Map=Map.substring(0,96)+"I0I0I0"+Map.substring(102,Map.length);
+   Map=Map.substring(0,124)+"G0G0G0"+Map.substring(130,Map.length);
+   Map=Map.substring(0,152)+"A1A1A1"+Map.substring(158,Map.length);
+   Map=Map.substring(0,180)+"U0U0U0"+Map.substring(186,Map.length);
+   Map=Map.substring(0,208)+"A0A0A0"+Map.substring(214,Map.length);
+  }
+ }
+ if (CharMap=="L5"||CharMap=="M5") {
+  //if (Paying==0) {
+  // Map=Map.substring(0,0)+"U9"+Map.substring(2,Map.length);
+  // Map=Map.substring(0,28)+"U9"+Map.substring(30,Map.length);
+  // Map=Map.substring(0,56)+"U9"+Map.substring(58,Map.length);
+  // Map=Map.substring(0,84)+"U9"+Map.substring(86,Map.length);
+  // Map=Map.substring(0,112)+"U9"+Map.substring(114,Map.length);
+  // Map=Map.substring(0,140)+"U9"+Map.substring(142,Map.length);
+  // Map=Map.substring(0,168)+"U9"+Map.substring(170,Map.length);
+  // Map=Map.substring(0,196)+"U9"+Map.substring(198,Map.length);
+  // Map=Map.substring(0,224)+"U9"+Map.substring(226,Map.length);
+  // Map=Map.substring(0,252)+"U9"+Map.substring(254,Map.length);
+  //}
+ }
+ if (CharMap=="L0") {
+  //if (Paying==0) {
+  // Map=Map.substring(0,26)+"U9"+Map.substring(28,Map.length);
+  // Map=Map.substring(0,54)+"U9"+Map.substring(56,Map.length);
+  // Map=Map.substring(0,82)+"U9"+Map.substring(84,Map.length);
+  // Map=Map.substring(0,110)+"U9"+Map.substring(112,Map.length);
+  // Map=Map.substring(0,138)+"U9"+Map.substring(140,Map.length);
+  // Map=Map.substring(0,166)+"U9"+Map.substring(168,Map.length);
+  // Map=Map.substring(0,194)+"U9"+Map.substring(196,Map.length);
+  // Map=Map.substring(0,222)+"U9"+Map.substring(224,Map.length);
+  // Map=Map.substring(0,250)+"U9"+Map.substring(252,Map.length);
+  // Map=Map.substring(0,278)+"U9"+Map.substring(280,Map.length);
+  //}
+ }
+ PUP=""; z=0;
+ for (i=0; i<MapSizeY+1; i++) {
+  for (j=0; j<MapSizeX+1; j++) {
+   eval('T'+z+'.setAttribute(\"src\",\"'+DirTile+'/'+Map.charAt(z*2)+Map.charAt((z*2)+1)+'.png\");');
+   z++;
+  }
+ }
+ RefMap=0;
+ if (CharMap.indexOf("e")>-1) { CheckLights(); }
+ if (CharMap=="G0") { 
+  if (CharZ==79) { 
+   PopAlign="center"; POP("You wash up on shore");
+  }
+ }
+ if (CharMap=="G2e") {
+  PopAlign="center";
+  POP("<center><font color=purple>The Evil Que</font><p>You were foolish<br>to come here player<p>Now I must destory you.");
+ }
+ if (CharMap=="L3e") { NPC_NPCHazmat(0); }
+}
+
+</script></body></html>
+
+</body>
+</html>
