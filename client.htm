@@ -315,12 +315,12 @@ function Render() {
   // it would be nice to reduce amount of server-side
   // variables, but SHigh might be useful 
   
-  SWide=(MapSizeX+1)*1; // number maps wide on this server
-  SHigh=(SWide*10)*1;   // can we eliminate this variable??
+  SWide=+MapSizeX+1; // number maps wide on this server
+  SHigh=SWide*10;   // can we eliminate this variable??
   
   PZ=parseInt(PZloc,16);
-  PY=Math.floor(PZ/(SWide+1));
-  PX=PZ-(PY*(SWide+1));
+  PY=Math.floor(PZ/SWide);
+  PX=PZ-(PY*SWide);
 
   //
   // will need to figure out the starting location of
@@ -348,14 +348,14 @@ function Render() {
   Game=Game+"PZ="+PZ+" PX="+PX+" PY="+PY+"<p>";
   // end debug code
 
-  for (RY=StartY; RY<StartX+SHigh; RY++) {
+  for (RY=StartY; RY<StartY+SHigh; RY++) {
     for (RX=StartX; RX<StartX+SWide; RX++) {
       for (i=0; i<Items.length; i=i+5) {
         id=Items.substring(i,i+5);
         item=Items.substring(i,i+2);
         z=parseInt(Items.substring(i+2,i+5),16);
-        y=Math.floor(z/(SWide+1));
-        x=z-(y*(SWide+1));
+        y=Math.floor(z/SWide);
+        x=z-(y*SWide);
         if (RX==x) {
           if (RY==y) {
             if (item=="W") {
@@ -363,6 +363,8 @@ function Render() {
             } else {
               if (item=="V") {
                 // render building if first letter is V
+
+			//how is building coded into 1 byte after V?
               } else {
                 // otherwise render item
                 D=document.getElementById("IListLayer"); if(!D){
@@ -380,7 +382,7 @@ function Render() {
                 }
                 o.onmousedown=new Function("ClickHere("+z+");");
                 o.style.position="absolute";
-                o.style.left=(x*32)+32;
+                o.style.left=x*32;
                 o.style.top=y*32;
                 o.style.visibility="visible";
                 e=DirItem+'/O'+item+'.gif';
