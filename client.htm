@@ -342,11 +342,11 @@ function Render() {
   StartZ=0;
   StartY=0;
   StartX=0;
-    
-  Game="<p align=center>PZloc="+PZloc+"<p>";
-  Game=Game+"PZ="+PZ+"<br>";
-  Game=Game+"PX="+PX+"<br>";
-  Game=Game+"PY="+PY+"<p>";
+
+  // debug code    
+  Game="<p align=center>PZloc="+PZloc+"<br>";
+  Game=Game+"PZ="+PZ+" PX="+PX+" PY="+PY+"<p>";
+  // end debug code
 
   for (RY=StartY; RY<StartX+SHigh; RY++) {
     for (RX=StartX; RX<StartX+SWide; RX++) {
@@ -358,7 +358,6 @@ function Render() {
         x=z-(y*(SWide+1));
         if (RX==x) {
           if (RY==y) {
-            Game=Game+item+" at "+z+" ("+x+","+y+") "+RX+" "+RY+"<br>";
             if (item=="W") {
               // render player if first letter is W
             } else {
@@ -443,22 +442,12 @@ function RenderObj(RItem,z) {
 function ClickHere(z) {
   z=z.toString(16);
   if (z==PZloc) {
-    //
-    // render list
-    // add or delete item
-    //
-    Game="<a href=\'javascript: Render();\'>In-Game Items</a><br>";
-    while (z.length<3) { z="0"+z; }
-    f=0;
+    f=0; while (z.length<3) { z="0"+z; }
     for (i=0; i<Items.length; i=i+5) {
       a=Items.substring(i,i+2); b=Items.substring(i+2,i+5);
-      if (b==z) {
-        Game=Game+"<a href=\'javascript:UseItem(\""+a+"\",\""+z+"\");\'>"+ItemID(a)+"</a><br>";
-      }
+      if (b==z) { f=1; Game=Game+"<a href=\'javascript:Use(\""+a+"\",\""+z+"\");\'>"+ItemID(a)+"</a><br>"; }
     }
-    if (f==0) { 
-      Game=Game+"<a href=\'javascript: AddItem(0);\'>Add Item</a><br>";
-    }
+    if (f==0) { Game=Game+"<a href=\'javascript: AddItem(0);\'>Add Item</a><br>"; }
     POP(Game);
   } else {
     HitIt("mov",PToken+PZloc+"-"+z);
@@ -484,21 +473,30 @@ function DeleteItem(a,b) {
   HitIt("del",a+b);
 }
 
-function UseItem(a,z) {
-  Game=a+" "+z+"<p>";
-  z=z.toString(16);  
-
+function Use(a,z) {
+  Game=ItemID(a)+"<p>"; z=z.toString(16);
+  opt="Use "+ItemID(a);
+  if (a<"Ta") { opt="Get "+ItemID(a); }
+  if (a=="Ye"||a=="Yf") { opt="Flip Switch"; }
+  if (a=="Yh") { opt="Get Water from Well"; } 
+  Game=Game+"<a href=\'javascript:UseItem(\""+a+"\",\""+z+"\");\'>"+opt+"</a><br>";  
   if (a.charAt(0)!="W") {
-    f=1; Game=Game+"<a href=\'javascript:DeleteItem(a,b);\'>Delete "+ItemID(a)+"</a><br>";
-  }
-
-  if (a=="Ye") { Game=Game+"Turning Switch On..."; HitIt("ren",a+z+"-Yf"); }
-  if (a=="Yf") { Game=Game+"Turning Switch Off..."; HitIt("ren",a+z+"-Ye"); } 
-  if (a=="Yh") { 
-    PInv=PInv.replace(/Bd/,"Ei");
-    SideBar();
+    f=1; Game=Game+"<a href=\'javascript:DeleteItem(a,z);\'>Delete "+ItemID(a)+"</a><br>";
   }
   POP(Game); 
+}
+
+function UseItem(a,z) {
+  if (a<"Ta") { 
+    if (PInv.indexOf("Za")>-1) {
+      HitIt("del",a+z);
+      PInv=PInv.replace(/Za/,a);
+      SideBar();
+    }  
+  }
+  if (a=="Ye") { POP("Turning Switch On..."); HitIt("ren",a+z+"-Yf"); }
+  if (a=="Yf") { POP("Turning Switch Off..."); HitIt("ren",a+z+"-Ye"); } 
+  if (a=="Yh") { POP("Filling Bucket..."); PInv=PInv.replace(/Bd/,"Ei"); SideBar(); }
 }
 
 function SideBar() {
@@ -630,11 +628,27 @@ function ClickInven(i) {
      if (MenuItem=="Ra") { PUP=PUP+"<a href=javascript:Null(); onmousedown=\"JavaScript:TreatBag("+i+")\">Fill Treat Bag</a><br>"; }
      if (MenuItem=="Rb") { PUP=PUP+"<a href=javascript:Null(); onmousedown=\"JavaScript:TreatBag("+i+")\">Open Treat Bag</a><br>"; }
      if (MenuItem>="Rc" && MenuItem<="Re") { PUP=PUP+"<a href=javascript:Null(); onmousedown=\"JavaScript:DrinkPotion("+i+")\">Drink "+ItemID(MenuItem)+"</a><br>"; PUP=PUP+"<a href=javascript:Null(); onmousedown=\"JavaScript:FillPotion("+i+")\">Fill Potion</a><br>"; }
-     PUP=PUP+"<a href=javascript:Null(); onmousedown=\"JavaScript:DropItem("+i+")\">Drop "+ItemID(MenuItem)+"</a><br>";
+     PUP=PUP+"<a href=javascript:Null(); onmousedown=\"JavaScript:DropItem(\'"+MenuItem+"\');\">Drop "+ItemID(MenuItem)+"</a><br>";
      PopAlign="inven"; PopClick=i;
      POP(PUP+"</font></b>");
   }
 } 
+
+function DropItem(item) {
+  // 
+  // send server command to add object
+  // remove from inventory
+  //
+  PInv=PInv.replace(item,"Za"); SideBar();
+  HitIt("add",item+"-"+PZloc+"-60");
+}
+
+
+
+
+
+
+
 
 function ItemMenu(itemz,c) { if (c<"S1") { if (c=="F1") { return"<a href=javascript:Null(); onmousedown=\"javascript:AttkChicken2("+itemz+",'"+c+"');\">Attack "+ItemID(c)+"</a><br>"; } else { return"<a href=javascript:Null(); onmousedown=\"javascript:GetDItem2("+itemz+",'"+c+"');\">Get "+ItemID(c)+"</a><br>"; }} if (c=="Z8") { return"<a href=javascript:Null(); onmousedown=\"javascript:Fort(0);\">Enter Hidden Fort</a><br>"; } if (c=="Z7") { return"<a href=javascript:Null(); onmousedown=\"javascript:Trader(0);\">Talk to Trader</a><br>"; } if (c=="Z6") { return"<a href=javascript:Null(); onmousedown=\"javascript:UseFire2("+itemz+",'"+c+"');\">Use Fire</a><br>"; }} 
 function ProcessMenu(i,j) { Rtn=""; if (IV[1]<"S0") { if (IV[1]>"A") { f=1; Rtn="<a href=javascript:Null(); onmousedown=\"javascript:GetSItem("+i+");\">Get "+ItemID(IV[1])+"</a><br>"; }} else { if (IV[1]<"R0") { f=1; Rtn="<a href=javascript:Null(); onmousedown=\"javascript:SMine("+i+");\">Mine "+ItemID(IV[1])+"</a><br>"; } else { if (IV[1]=="S1") { f=1; Rtn="<a href=javascript:Null(); onmousedown=\"javascript:Badlands("+i+");\">"+ItemID(IV[1])+"</a><br>"; } else { if (IV[1]=="S2") { f=1; Rtn="<a href=javascript:Null(); onmousedown=\"javascript:Aggressive("+i+");\">"+ItemID(IV[1])+"</a><br>"; } else { if (IV[1]=="S5" || IV[1]=="S6") { if (SwitchIs=="S6") { f=1; Rtn="<a href=javascript:Null(); onmousedown=\"javascript:WalkHere("+IV[4]+"); Switch(0);\">Switch is On</a><br>"; } else { f=1; Rtn="<a href=javascript:Null(); onmousedown=\"javascript:WalkHere("+IV[4]+"); Switch(1);\">Switch is Off</a><br>"; }} else { if (IV[1]<"Z1") { if (IV[3].charAt(0)!="K") { f=1; if (PObj.indexOf("P2")>-1) { Rtn="<a href=javascript:Null(); onmousedown=\"javascript:AttkSItem("+i+");\">Water Blast "+ItemID(IV[1])+" (Lvl "+ItemLevel(IV[1])+")</a><br>"; } else { if (PObj.indexOf("P5")>-1) { Rtn="<a href=javascript:Null(); onmousedown=\"javascript:AttkSItem("+i+");\">Fire Ball "+ItemID(IV[1])+" (Lvl "+ItemLevel(IV[1])+")</a><br>"; } else { if (PObj.indexOf("P8")>-1) { Rtn="<a href=javascript:Null(); onmousedown=\"javascript:AttkSItem("+i+");\">Wind Burst "+ItemID(IV[1])+" (Lvl "+ItemLevel(IV[1])+")</a><br>"; } else { Rtn="<a href=javascript:Null(); onmousedown=\"javascript:AttkSItem("+i+");\">Attack "+ItemID(IV[1])+" (Lvl "+ItemLevel(IV[1])+")</a><br>"; }}}}}}}}}} if (IV[1]=="Z2") { f=1; Rtn="<a href=javascript:Null(); onmousedown=\"javascript:ReadSign("+i+");\">Read Sign</a><br>"; } if (IV[1]=="Z3") { f=1; Rtn="<a href=javascript:Null(); onmousedown=\"javascript:SFish("+i+");\">Catch "+ItemID(IV[2])+"</a><br>"; } if (IV[1]=="Z4") { f=1; Rtn="<a href=javascript:Null(); onmousedown=\"javascript:EnterSCity("+i+");\">Enter City</a><br>"; } if (IV[1]=="Z5") { f=1; Rtn="<a href=javascript:Null(); onmousedown=\"javascript:UseSItem("+i+");\">Use "+ItemID(IV[1])+"</a><br>"; } if (IV[1]=="Z6") { f=1; Rtn="<a href=javascript:Null(); onmousedown=\"javascript:UseSItem("+i+");\">Use "+ItemID(IV[1])+"</a><br>"; } if (IV[1]=="Z8") { f=1; Rtn="<a href=javascript:Null(); onmousedown=\"javascript:EnterSCity("+i+");\">Enter Hidden Fort</a><br>"; } if (Admin) { Rtn=Rtn+AdminStatic(i); } return Rtn; } 
