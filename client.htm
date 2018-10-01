@@ -393,7 +393,22 @@ function Render() {
                 o.style.top=y*32-16+"px";
                 e=DirChar+'/CHRH'+obj[item].substring(0,2)+obj[item].charAt(3)+'.gif';
                 if (o.src != e) { o.src=e; }
-				 //items will go here
+		for(i=4;i<obj[item].length;i+=2){
+		  I=obj[item].substring(i,i+2);
+                  if (!(D1=document.getElementById(id+I))) {
+                    o=document.createElement("img");
+                    o.setAttribute("id",id+I);
+                    o.style.position="absolute";
+                    D.appendChild(o);
+                  }
+                  o.onmousedown=new Function("ClickHere("+z+");");
+                  o.style.position="absolute";
+                  o.style.visibility="visible";
+                  o.style.left=x*32-16+"px";
+                  o.style.top=y*32-16+"px";
+		  e=DirChar+"/CHI"+I+obj[item].charAt(3)+'.gif';
+                  if (o.src != e) { o.src=e; }
+		}
             } else {
               if (item.charAt(0)=="V"&&(item in o)) {
                 // render building if first letter is V
