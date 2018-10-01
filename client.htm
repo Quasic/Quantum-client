@@ -358,15 +358,6 @@ function Render() {
         x=z-(y*SWide);
         if (RX==x) {
           if (RY==y) {
-            if (item=="W") {
-              // render player if first letter is W
-            } else {
-              if (item=="V") {
-                // render building if first letter is V
-
-			//how is building coded into 1 byte after V?
-              } else {
-                // otherwise render item
                 D=document.getElementById("IListLayer"); if(!D){
                   D=document.createElement("DIV");
                   D.setAttribute("id","IListLayer");
@@ -382,9 +373,38 @@ function Render() {
                 }
                 o.onmousedown=new Function("ClickHere("+z+");");
                 o.style.position="absolute";
-                o.style.left=x*32;
-                o.style.top=y*32;
                 o.style.visibility="visible";
+            if (item.charAt(0)=="W"&&(typeof obj[item]=="string")) {
+              // render player if first letter is W
+                o.style.left=x*32-16+"px";
+                o.style.top=y*32-16+"px";
+                e=DirChar+'/CHR'+obj[item].charAt(0)+obj[item].substring(2,4)+'.gif';
+                if (o.src != e) { o.src=e; }
+                if (!(D1=document.getElementById(id+"H"))) {
+                  o=document.createElement("img");
+                  o.setAttribute("id",id+"H");
+                  o.style.position="absolute";
+                  D.appendChild(o);
+                }
+                o.onmousedown=new Function("ClickHere("+z+");");
+                o.style.position="absolute";
+                o.style.visibility="visible";
+                o.style.left=x*32-16+"px";
+                o.style.top=y*32-16+"px";
+                e=DirChar+'/CHRH'+obj[item].substring(0,2)+obj[item].charAt(3)+'.gif';
+                if (o.src != e) { o.src=e; }
+				 //items will go here
+            } else {
+              if (item.charAt(0)=="V"&&(item in o)) {
+                // render building if first letter is V
+                o.style.left=x*32;//needs to update later
+                o.style.top=y*32;//should probably be bottom instead or update later otherwise
+                e=DirBuild+'/'+o[item]+'.gif';
+                if (o.src != e) { o.src=e; }
+              } else {
+                // otherwise render item
+                o.style.left=x*32+"px";
+                o.style.top=y*32+"px";
                 e=DirItem+'/O'+item+'.gif';
                 if (o.src != e) { o.src=e; }
               }                
