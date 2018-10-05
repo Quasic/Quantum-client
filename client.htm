@@ -317,6 +317,7 @@ function Render() {
   
   SWide=+MapSizeX+1; // number maps wide on this server
   SHigh=SWide*10;   // can we eliminate this variable??
+		//using it for buildings, but prob. could do w/o
   
   PZ=parseInt(PZloc,16);
   PY=Math.floor(PZ/SWide);
@@ -363,6 +364,7 @@ function Render() {
                   D.setAttribute("id","IListLayer");
                   D.style.position="absolute";
                   D.style.top=D.style.left=0;
+                  D.style.height=SHigh*32+"px";
                   docBody.appendChild(D);
                 }
                 if (!(D1=document.getElementById(id))) {
@@ -413,7 +415,8 @@ function Render() {
               if (item.charAt(0)=="V"&&(item in o)) {
                 // render building if first letter is V
                 o.style.left=x*32;//needs to update later
-                o.style.top=y*32;//should probably be bottom instead or update later otherwise
+                //o.style.top=y*32;//should probably be bottom instead or update later otherwise
+          	o.style.bottom=(SHigh-y)*32+"px";
                 e=DirBuild+'/'+o[item]+'.gif';
                 if (o.src != e) { o.src=e; }
               } else {
